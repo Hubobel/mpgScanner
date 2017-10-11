@@ -15,10 +15,10 @@ Hierin werden nun Zeilenweise die folgenden Angaben gemacht:
 
 # Benutzung
 
-Das Programm wird am besten über einen Cronjob periodisch aufgerufen, z.Bsp. Stündlich, immer zur halben Stunde:
-Eintrag in der crontab sollte dann in etwa so ausschauen:
+Das Programm wird am besten über einen Cronjob periodisch aufgerufen, z.Bsp. Stündlich, immer zur halben Stunde, im Zeitraum von 7 bis 15 Uhr, an den Werk(Schul-)tagen Montag bis Freitag.
+Eintrag in der crontab sollte dann in etwa so ausschauen (Pfad zum Script bitte anpassen):
 
-30 * * * * python3 /home/carsten/Scripts/mpgScanner.py
+30 7-15 * * 1-5 python3 /home/carsten/Scripts/mpgScanner.py
 
 # Disclaimer
 
