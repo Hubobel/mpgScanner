@@ -37,6 +37,7 @@ def Nachricht(fradress, toadress, bccs=[], sub='I am ROOT',body='this comes from
         passw.append(a)
     fobj.close()
     pwd = passw[0]
+    acc = passw[1]
 
     msg = MIMEMultipart()
 
@@ -61,7 +62,7 @@ def Nachricht(fradress, toadress, bccs=[], sub='I am ROOT',body='this comes from
 
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
-    server.login(fromaddr, pwd)
+    server.login(acc, pwd)
     text = msg.as_string()
     server.sendmail(fromaddr, bccs, text)
     server.quit()
@@ -147,14 +148,16 @@ print('Es sind morgen Ferien: '+ str(ferien_morgen))
 print('Es ist ein Feiertag: '+str(feiertag))
 print('Es ist morgen ein Feiertag: '+str(feiertag_morgen))
 
-feiertag=False
-feiertag_morgen=False
-ferien_morgen=False
-ferien=False
+#feiertag=False
+#feiertag_morgen=False
+#ferien_morgen=False
+#ferien=False
 ############################################################
-if ferien or ferien_morgen:
+if ferien and ferien_morgen:
+    print('Es sind Ferien, also lass ich euch in Ruhe')
     quit()
-if feiertag or feiertag_morgen:
+if feiertag_morgen:
+    print('Morgen ist Feiertag, also gibts auch nichts, was sich lohnt, anzuschauen.')
     quit()
 
 def download(url):
@@ -240,23 +243,26 @@ if os.path.isfile(pfad+'/mpg/adressen.txt')== True:
 fradress='carsten.richter77@gmail.com'
 toadress='carsten@hubobel.de'
 #sub='das ist der erste Kombitest'
-#body = 'lalaland_Teil3'
+body = 'lalaland_Teil3'
 #anhang = ['adressen.txt','heute.pdf','morgen.pdf']
 #Nachricht (fradress,toadress,bcc,sub,body,anhang)
 
 if mail == 1:
+
     body = 'Es gibt eine aktuelle Version des heutigen Vertretungsplanes.'
     anhang = ['heute.pdf']
     sub = 'MPG-heute aktualisiert'
     Nachricht(fradress, toadress, bcc, sub, body, anhang)
-
+    print (body+' ich versende das mal an: '+str(bcc))
 if mail == 2:
     body = 'Es gibt eine aktuelle Version des morgigen Vertretungsplanes.'
     anhang = ['morgen.pdf']
     sub = 'MPG-morgen aktualisiert'
     Nachricht(fradress, toadress, bcc, sub, body, anhang)
+    print(body + ' ich versende das mal an: ' + str(bcc))
 if mail == 3:
     body = 'Es gibt aktuelle Versionen der MPG-Vertretungspläne.'
     anhang = ['heute.pdf','morgen.pdf']
     sub = 'MPG-Vertretungspläne aktualisiert'
     Nachricht(fradress, toadress, bcc, sub, body, anhang)
+    print(body + ' ich versende das mal an: ' + str(bcc))
