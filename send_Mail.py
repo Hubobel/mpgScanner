@@ -10,8 +10,10 @@ pfad = os.path.dirname(__file__)
 def Nachricht(fradress, toadress, bccs=[], sub='I am ROOT',body='this comes from Hubobel', attach=[]):
     fromaddr = fradress
     toaddr = toadress
+    if bccs==[]:
+        bccs = toadress
 
-    fobj = open(pfad + "/mpg/pass.txt")     #Passwort für den Gmailaccount laden
+    fobj = open(pfad + "/pass.txt")     #Passwort für den Gmailaccount laden
     passw = []
     for line in fobj:
         a = line.rstrip()
@@ -48,17 +50,20 @@ def Nachricht(fradress, toadress, bccs=[], sub='I am ROOT',body='this comes from
     server.quit()
     return
 
+if os.path.isfile(pfad+'/mpg/adressen.txt')== True:
 
-fobj = open(pfad + "/mpg/adressen.txt")
+    fobj = open(pfad + "/mpg/adressen.txt")
+    bcc = []
+    for line in fobj:
+        a = line.rstrip()
+        bcc.append(a)
+    fobj.close()
+
 fradress='carsten.richter77@gmail.com'
-toadress='carsten.richter77@gmail.com'
+toadress='carsten@hubobel.de'
 sub='das ist der finale Standalonetest'
-anhang = ['adressen.txt','heute.pdf']
-body = 'lalaland_Teil2'
-bcc = []
-for line in fobj:
-    a = line.rstrip()
-    bcc.append(a)
-fobj.close()
+anhang = ['adressen.txt','heute.pdf','morgen.pdf']
+body = 'lalaland_Teil3'
 
-Nachricht (fradress,toadress)
+
+Nachricht (fradress,toadress,bcc,'pdfs','und da sind sie',anhang)

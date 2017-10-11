@@ -228,9 +228,6 @@ except FileNotFoundError:
     url = 'morgen'
     download(url)
 
-
-
-
 if os.path.isfile(pfad+'/mpg/adressen.txt')== True:
 
     fobj = open(pfad + "/mpg/adressen.txt")
@@ -246,7 +243,6 @@ toadress='carsten@hubobel.de'
 #body = 'lalaland_Teil3'
 #anhang = ['adressen.txt','heute.pdf','morgen.pdf']
 #Nachricht (fradress,toadress,bcc,sub,body,anhang)
-mail=3
 
 if mail == 1:
     body = 'Es gibt eine aktuelle Version des heutigen Vertretungsplanes.'
