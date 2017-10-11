@@ -23,3 +23,5 @@ Eintrag in der crontab sollte dann in etwa so ausschauen:
 # Disclaimer
 
 Diese Software benutz den Zugang zum Schulserver des Max-Planck-Gymnasiums in Ludwigshafen, um dort die Vertretungspläne für den aktuellen und den darauf folgenden Schultag zu laden. Für die Feier- und Ferientagsdaten wird die API von .... benutz. Vielen Dank für die Bereitstellung der Daten.
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.me/Hubobel)
