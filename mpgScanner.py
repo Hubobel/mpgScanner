@@ -3,9 +3,15 @@ import json
 import time
 import datetime
 import os
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
+
 
 pfad = os.path.dirname(__file__)
-
+mail = 0
 url_ferien ='http://api.smartnoob.de/ferien/v1/ferien/?bundesland=rp'
 url_feiertage = 'http://api.smartnoob.de/ferien/v1/feiertage/?bundesland=rp'
 
@@ -16,6 +22,51 @@ ferien = False
 ferien_morgen = False
 feiertag = False
 feiertag_morgen = False
+
+
+def Nachricht(fradress, toadress, bccs=[], sub='I am ROOT',body='this comes from Hubobel', attach=[]):
+    fromaddr = fradress
+    toaddr = toadress
+    if bccs==[]:
+        bccs = toadress
+
+    fobj = open(pfad + "/pass.txt")     #Passwort für den Gmailaccount laden
+    passw = []
+    for line in fobj:
+        a = line.rstrip()
+        passw.append(a)
+    fobj.close()
+    pwd = passw[0]
+
+    msg = MIMEMultipart()
+
+    msg['From'] = fromaddr
+    msg['To'] = toaddr
+    msg['Subject'] = sub
+
+    msg.attach(MIMEText(body, 'plain'))
+
+    for each in attach:
+
+        filename = each
+        attachment = open(pfad + '/mpg/'+each, 'rb')
+
+        part = MIMEBase('application', 'octet-stream')
+        part.set_payload((attachment).read())
+        encoders.encode_base64(part)
+        part.add_header('Content-Disposition', 'attachment; filename= %s' % filename)
+
+        msg.attach(part)
+
+
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login(fromaddr, pwd)
+    text = msg.as_string()
+    server.sendmail(fromaddr, bccs, text)
+    server.quit()
+    return
+
 
 if os.path.isdir(pfad+'/mpg')!= True:   #prüfen, ob das UNTERverzeichniss /mpg bereits existiert
     os.makedirs(pfad+'/mpg')
@@ -132,7 +183,7 @@ try:
     y = os.stat(pfad+'/mpg/heute1.pdf')
     y = y.st_size
     y1 = str(y)
-    mail = 0
+
 
     if x != y:
         mail=mail+1
@@ -177,13 +228,39 @@ except FileNotFoundError:
     url = 'morgen'
     download(url)
 
-if mail == 1:
-    befehl = 's-nail -a ' + pfad + '/mpg/heute.pdf -s "Heute-MPG-Vertretungsliste" schneeschieben@web.de'
-    os.system(befehl)
-if mail == 2:
-    befehl = 's-nail -a ' + pfad + '/mpg/morgen.pdf -s "Morgen-MPG-Vertretungsliste" schneeschieben@web.de'
-    os.system(befehl)
-if mail == 3:
-    befehl = 's-nail -a ' + pfad + '/mpg/heute.pdf -a ' + pfad + '/mpg/morgen.pdf -s "Alpha-MPG-Vertretungsliste" schneeschieben@web.de'
-    os.system(befehl)
 
+
+
+if os.path.isfile(pfad+'/mpg/adressen.txt')== True:
+
+    fobj = open(pfad + "/mpg/adressen.txt")
+    bcc = []
+    for line in fobj:
+        a = line.rstrip()
+        bcc.append(a)
+    fobj.close()
+
+fradress='carsten.richter77@gmail.com'
+toadress='carsten@hubobel.de'
+#sub='das ist der erste Kombitest'
+#body = 'lalaland_Teil3'
+#anhang = ['adressen.txt','heute.pdf','morgen.pdf']
+#Nachricht (fradress,toadress,bcc,sub,body,anhang)
+mail=3
+
+if mail == 1:
+    body = 'Es gibt eine aktuelle Version des heutigen Vertretungsplanes.'
+    anhang = ['heute.pdf']
+    sub = 'MPG-heute aktualisiert'
+    Nachricht(fradress, toadress, bcc, sub, body, anhang)
+
+if mail == 2:
+    body = 'Es gibt eine aktuelle Version des morgigen Vertretungsplanes.'
+    anhang = ['morgen.pdf']
+    sub = 'MPG-morgen aktualisiert'
+    Nachricht(fradress, toadress, bcc, sub, body, anhang)
+if mail == 3:
+    body = 'Es gibt aktuelle Versionen der MPG-Vertretungspläne.'
+    anhang = ['heute.pdf','morgen.pdf']
+    sub = 'MPG-Vertretungspläne aktualisiert'
+    Nachricht(fradress, toadress, bcc, sub, body, anhang)
