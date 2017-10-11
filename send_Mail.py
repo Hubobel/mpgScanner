@@ -20,6 +20,7 @@ def Nachricht(fradress, toadress, bccs=[], sub='I am ROOT',body='this comes from
         passw.append(a)
     fobj.close()
     pwd = passw[0]
+    acc = passw[1]
 
     msg = MIMEMultipart()
 
@@ -44,7 +45,7 @@ def Nachricht(fradress, toadress, bccs=[], sub='I am ROOT',body='this comes from
 
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
-    server.login(fromaddr, pwd)
+    server.login(acc, pwd)
     text = msg.as_string()
     server.sendmail(fromaddr, bccs, text)
     server.quit()
@@ -67,3 +68,4 @@ body = 'lalaland_Teil3'
 
 
 Nachricht (fradress,toadress,bcc,'pdfs','und da sind sie',anhang)
+print (body+'gdsjfd'+ str(bcc))
