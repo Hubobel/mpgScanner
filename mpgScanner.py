@@ -23,8 +23,10 @@ from email import encoders
 
 pfad = os.path.dirname(__file__)
 mail = 0
+
 url_ferien ='http://api.smartnoob.de/ferien/v1/ferien/?bundesland=rp'
 url_feiertage = 'http://api.smartnoob.de/ferien/v1/feiertage/?bundesland=rp'
+url_ferien_ccu = 'http://10.0.1.100:8181/loksoft.exe?ret=dom.GetObject("Ferien").State('
 
 jetzt = int(time.strftime('%j'))
 tag = time.strftime('%d')
@@ -133,7 +135,20 @@ while x <a:
     if jetzt-1 == beginn:
         ferien_morgen = True
 
+
+
     x = x+1
+
+if ferien:
+    try:
+        requests.post(url_ferien_ccu+'1)')
+    except:
+        None
+else:
+    try:
+        requests.post(url_ferien_ccu+'0)')
+    except:
+        None
 
 a= len(data_feiertage['daten'])
 x = 0
