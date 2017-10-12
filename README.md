@@ -11,8 +11,14 @@ Im gleichen Ordner muss eine neue Datei, mit dem Namen 'pass.txt', erstellt werd
 Hierin werden nun Zeilenweise die folgenden Angaben gemacht:
 
 - Passwort für den eigenen G-Mail Account (wird zum Versenden der PDF´s benötigt)
+- eigene Emailadresse des für die versendung zuständigen Accounts
 - Europäisches Kürzel für den eignen Wohnort (wird zur Ermittlung der Feier- und Ferientage benötigt. z.Bsp. RP für RheinlandPfalz)
 
+Weiterhin muss auf dem ausführenden System die Pythonbiliothek "pyTelegramBotAPI" installiert sein:
+
+  -sollte pip noch nicht installiert sein: "sudo apt-get installe python3-pip"
+  -pip3 install pyTelegramBotAPI
+  
 # Benutzung
 
 Das Programm wird am besten über einen Cronjob periodisch aufgerufen, z.Bsp. Stündlich, immer zur halben Stunde, im Zeitraum von 7 bis 15 Uhr, an den Werk(Schul-)tagen Montag bis Freitag.
