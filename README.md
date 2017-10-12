@@ -2,6 +2,7 @@
 # mpgScanner
 holt die Vertretungspläne vom Schulserver und verschickt diese, sollten Aktualisierungen vorliegen, dann per Mail an beliebige viele
 Empfänger (via Blindcopy, BCC),in Abhänigkeit davon, ob gerade Ferien oder ein Feiertag sind.
+Für Nutzer der Hausautomation "Homematic": Es wird eine Systemvariable "Ferien" automatisch auf "True" bzw "False" gesetzt, wenn man dies möchte.
 
 
 # Installation
@@ -14,7 +15,7 @@ Hierin werden nun Zeilenweise die folgenden Angaben gemacht:
 - eigene Emailadresse des für die versendung zuständigen Accounts
 - Europäisches Kürzel für den eignen Wohnort (wird zur Ermittlung der Feier- und Ferientage benötigt. z.Bsp. RP für RheinlandPfalz)
 
-Weiterhin muss auf dem ausführenden System die Pythonbiliothek "pyTelegramBotAPI" installiert sein:
+Weiterhin muss auf dem ausführenden System die Pythonbiliothek "pyTelegramBotAPI" installiert sein (wenn man Telegram nutzen möchte, sonst wird diese Funktion automatisch deaktiviert:
 
   -sollte pip noch nicht installiert sein: "sudo apt-get installe python3-pip"
   -pip3 install pyTelegramBotAPI
