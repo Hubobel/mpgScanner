@@ -4,7 +4,17 @@ import time
 import datetime
 import os
 import smtplib
-import telebot
+
+try:
+    import telebot
+    TOKEN = '467241832:AAH3e0y6Fm7ig5DtConJP29GsD-zX1psNZo'
+    chat_id = '@mpglu'
+    tb = telebot.TeleBot(TOKEN)
+    telegram = True
+except ImportError:
+    print('Librarie "telebot" ist nicht installiert. Keine Verwendung von Telegram!!!')
+    telegram = False
+
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
@@ -23,11 +33,6 @@ ferien = False
 ferien_morgen = False
 feiertag = False
 feiertag_morgen = False
-
-TOKEN = '467241832:AAH3e0y6Fm7ig5DtConJP29GsD-zX1psNZo'
-chat_id = '@mpglu'
-tb=telebot.TeleBot(TOKEN)
-
 
 def Nachricht(fradress, toadress, bccs=[], sub='I am ROOT',body='this comes from Hubobel', attach=[]):
     fromaddr = fradress
@@ -251,6 +256,8 @@ toadress='carsten@hubobel.de'
 body = 'lalaland_Teil3'
 #anhang = ['adressen.txt','heute.pdf','morgen.pdf']
 #Nachricht (fradress,toadress,bcc,sub,body,anhang)
+#mail=1
+#telegram=True
 
 if mail == 1:
 
@@ -259,26 +266,26 @@ if mail == 1:
     sub = 'MPG-heute aktualisiert'
     Nachricht(fradress, toadress, bcc, sub, body, anhang)
     print (body+' ich versende das mal an: '+str(bcc))
-
-    document = open(pfad+'/mpg/heute.pdf', 'rb')
-    tb.send_document(chat_id, document, caption=body)
+    if telegram:
+        document = open(pfad+'/mpg/heute.pdf', 'rb')
+        tb.send_document(chat_id, document, caption=body)
 if mail == 2:
     body = 'Es gibt eine aktuelle Version des morgigen Vertretungsplanes.'
     anhang = ['morgen.pdf']
     sub = 'MPG-morgen aktualisiert'
     Nachricht(fradress, toadress, bcc, sub, body, anhang)
     print(body + ' ich versende das mal an: ' + str(bcc))
-
-    document = open(pfad + '/mpg/morgen.pdf', 'rb')
-    tb.send_document(chat_id, document, caption=body)
+    if telegram:
+        document = open(pfad + '/mpg/morgen.pdf', 'rb')
+        tb.send_document(chat_id, document, caption=body)
 if mail == 3:
     body = 'Es gibt aktuelle Versionen der MPG-Vertretungspläne.'
     anhang = ['heute.pdf','morgen.pdf']
     sub = 'MPG-Vertretungspläne aktualisiert'
     Nachricht(fradress, toadress, bcc, sub, body, anhang)
     print(body + ' ich versende das mal an: ' + str(bcc))
-
-    document = open(pfad + '/mpg/heute.pdf', 'rb')
-    tb.send_document(chat_id, document, caption=body)
-    document = open(pfad + '/mpg/morgen.pdf', 'rb')
-    tb.send_document(chat_id, document)
+    if telegram:
+        document = open(pfad + '/mpg/heute.pdf', 'rb')
+        tb.send_document(chat_id, document, caption=body)
+        document = open(pfad + '/mpg/morgen.pdf', 'rb')
+        tb.send_document(chat_id, document)
