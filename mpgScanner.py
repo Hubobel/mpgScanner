@@ -24,9 +24,21 @@ from email import encoders
 pfad = os.path.dirname(__file__)
 mail = 0
 
-url_ferien ='http://api.smartnoob.de/ferien/v1/ferien/?bundesland=rp'
-url_feiertage = 'http://api.smartnoob.de/ferien/v1/feiertage/?bundesland=rp'
-url_ferien_ccu = 'http://10.0.1.100:8181/loksoft.exe?ret=dom.GetObject("Ferien").State('
+fobj = open(pfad + "/pass.txt")     #Passwort für den Gmailaccount laden
+passw = []
+for line in fobj:
+    a = line.rstrip()
+    passw.append(a)
+fobj.close()
+
+url_ferien ='http://api.smartnoob.de/ferien/v1/ferien/?bundesland=r'+passw[2]
+url_feiertage = 'http://api.smartnoob.de/ferien/v1/feiertage/?bundesland='+passw[2]
+
+if len(passw)>=4:
+    url_ferien_ccu = 'http://'+passw[3]+'/loksoft.exe?ret=dom.GetObject("Ferien").State('
+    ccu = True
+else:
+    ccu = False
 
 jetzt = int(time.strftime('%j'))
 tag = time.strftime('%d')
@@ -36,18 +48,13 @@ ferien_morgen = False
 feiertag = False
 feiertag_morgen = False
 
-def Nachricht(fradress, toadress, bccs=[], sub='I am ROOT',body='this comes from Hubobel', attach=[]):
+
+def Nachricht(passw,fradress, toadress, bccs=[], sub='I am ROOT',body='this comes from Hubobel', attach=[]):
     fromaddr = fradress
     toaddr = toadress
     if bccs==[]:
         bccs = toadress
 
-    fobj = open(pfad + "/pass.txt")     #Passwort für den Gmailaccount laden
-    passw = []
-    for line in fobj:
-        a = line.rstrip()
-        passw.append(a)
-    fobj.close()
     pwd = passw[0]
     acc = passw[1]
 
@@ -79,7 +86,6 @@ def Nachricht(fradress, toadress, bccs=[], sub='I am ROOT',body='this comes from
     server.sendmail(fromaddr, bccs, text)
     server.quit()
     return
-
 
 if os.path.isdir(pfad+'/mpg')!= True:   #prüfen, ob das UNTERverzeichniss /mpg bereits existiert
     os.makedirs(pfad+'/mpg')
@@ -135,16 +141,14 @@ while x <a:
     if jetzt-1 == beginn:
         ferien_morgen = True
 
-
-
     x = x+1
 
-if ferien:
+if ferien and ccu:          #setzen der CCU Variable
     try:
         requests.post(url_ferien_ccu+'1)')
     except:
         None
-else:
+if ferien == False and ccu :
     try:
         requests.post(url_ferien_ccu+'0)')
     except:
@@ -173,10 +177,6 @@ print('Es sind morgen Ferien: '+ str(ferien_morgen))
 print('Es ist ein Feiertag: '+str(feiertag))
 print('Es ist morgen ein Feiertag: '+str(feiertag_morgen))
 
-#feiertag=False
-#feiertag_morgen=False
-#ferien_morgen=False
-#ferien=False
 ############################################################
 if ferien and ferien_morgen:
     print('Es sind Ferien, also lass ich euch in Ruhe')
@@ -267,19 +267,18 @@ if os.path.isfile(pfad+'/mpg/adressen.txt')== True:
 
 fradress='carsten.richter77@gmail.com'
 toadress='carsten@hubobel.de'
-#sub='das ist der erste Kombitest'
-body = 'lalaland_Teil3'
+
+#sub='Hier kommt der Betreff rein'
+#body = 'hier der Mailtext'
 #anhang = ['adressen.txt','heute.pdf','morgen.pdf']
 #Nachricht (fradress,toadress,bcc,sub,body,anhang)
-#mail=1
-#telegram=True
 
 if mail == 1:
 
     body = 'Es gibt eine aktuelle Version des heutigen Vertretungsplanes.'
     anhang = ['heute.pdf']
     sub = 'MPG-heute aktualisiert'
-    Nachricht(fradress, toadress, bcc, sub, body, anhang)
+    Nachricht(passw,fradress, toadress, bcc, sub, body, anhang)
     print (body+' ich versende das mal an: '+str(bcc))
     if telegram:
         document = open(pfad+'/mpg/heute.pdf', 'rb')
@@ -288,7 +287,7 @@ if mail == 2:
     body = 'Es gibt eine aktuelle Version des morgigen Vertretungsplanes.'
     anhang = ['morgen.pdf']
     sub = 'MPG-morgen aktualisiert'
-    Nachricht(fradress, toadress, bcc, sub, body, anhang)
+    Nachricht(passw,fradress, toadress, bcc, sub, body, anhang)
     print(body + ' ich versende das mal an: ' + str(bcc))
     if telegram:
         document = open(pfad + '/mpg/morgen.pdf', 'rb')
@@ -297,7 +296,7 @@ if mail == 3:
     body = 'Es gibt aktuelle Versionen der MPG-Vertretungspläne.'
     anhang = ['heute.pdf','morgen.pdf']
     sub = 'MPG-Vertretungspläne aktualisiert'
-    Nachricht(fradress, toadress, bcc, sub, body, anhang)
+    Nachricht(passw,fradress, toadress, bcc, sub, body, anhang)
     print(body + ' ich versende das mal an: ' + str(bcc))
     if telegram:
         document = open(pfad + '/mpg/heute.pdf', 'rb')
