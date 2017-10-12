@@ -4,6 +4,7 @@ import time
 import datetime
 import os
 import smtplib
+import telebot
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
@@ -22,6 +23,10 @@ ferien = False
 ferien_morgen = False
 feiertag = False
 feiertag_morgen = False
+
+TOKEN = '312534798:AAFbMjS-tfd2BiZ_j3NEZuQYKwzACMcioVo'
+chat_id = '322673713'
+tb=telebot.TeleBot(TOKEN)
 
 
 def Nachricht(fradress, toadress, bccs=[], sub='I am ROOT',body='this comes from Hubobel', attach=[]):
@@ -254,15 +259,26 @@ if mail == 1:
     sub = 'MPG-heute aktualisiert'
     Nachricht(fradress, toadress, bcc, sub, body, anhang)
     print (body+' ich versende das mal an: '+str(bcc))
+
+    document = open(pfad+'/mpg/heute.pdf', 'rb')
+    tb.send_document(chat_id, document, caption=body)
 if mail == 2:
     body = 'Es gibt eine aktuelle Version des morgigen Vertretungsplanes.'
     anhang = ['morgen.pdf']
     sub = 'MPG-morgen aktualisiert'
     Nachricht(fradress, toadress, bcc, sub, body, anhang)
     print(body + ' ich versende das mal an: ' + str(bcc))
+
+    document = open(pfad + '/mpg/morgen.pdf', 'rb')
+    tb.send_document(chat_id, document, caption=body)
 if mail == 3:
     body = 'Es gibt aktuelle Versionen der MPG-Vertretungspläne.'
     anhang = ['heute.pdf','morgen.pdf']
     sub = 'MPG-Vertretungspläne aktualisiert'
     Nachricht(fradress, toadress, bcc, sub, body, anhang)
     print(body + ' ich versende das mal an: ' + str(bcc))
+
+    document = open(pfad + '/mpg/heute.pdf', 'rb')
+    tb.send_document(chat_id, document, caption=body)
+    document = open(pfad + '/mpg/morgen.pdf', 'rb')
+    tb.send_document(chat_id, document)
