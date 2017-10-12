@@ -24,8 +24,8 @@ ferien_morgen = False
 feiertag = False
 feiertag_morgen = False
 
-TOKEN = '312534798:AAFbMjS-tfd2BiZ_j3NEZuQYKwzACMcioVo'
-chat_id = '322673713'
+TOKEN = '467241832:AAH3e0y6Fm7ig5DtConJP29GsD-zX1psNZo'
+chat_id = '@mpglu'
 tb=telebot.TeleBot(TOKEN)
 
 
