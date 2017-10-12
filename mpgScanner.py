@@ -31,8 +31,9 @@ for line in fobj:
     passw.append(a)
 fobj.close()
 
-url_ferien ='http://api.smartnoob.de/ferien/v1/ferien/?bundesland=r'+passw[2]
+url_ferien ='http://api.smartnoob.de/ferien/v1/ferien/?bundesland='+passw[2]
 url_feiertage = 'http://api.smartnoob.de/ferien/v1/feiertage/?bundesland='+passw[2]
+print (url_ferien)
 
 if len(passw)>=4:
     url_ferien_ccu = 'http://'+passw[3]+'/loksoft.exe?ret=dom.GetObject("Ferien").State('
