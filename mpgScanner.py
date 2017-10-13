@@ -33,7 +33,6 @@ fobj.close()
 
 url_ferien ='http://api.smartnoob.de/ferien/v1/ferien/?bundesland='+passw[2]
 url_feiertage = 'http://api.smartnoob.de/ferien/v1/feiertage/?bundesland='+passw[2]
-print (url_ferien)
 
 if len(passw)>=4:
     url_ferien_ccu = 'http://'+passw[3]+'/loksoft.exe?ret=dom.GetObject("Ferien").State('
@@ -138,10 +137,10 @@ while x <a:
 
     if jetzt <= ende and jetzt >= beginn:
         ferien = True
-        ferien_morgen = True
     if jetzt-1 == beginn:
         ferien_morgen = True
-
+    if jetzt >= beginn and jetzt <= ende-1:
+        ferien_morgen = True
     x = x+1
 
 if ferien and ccu:          #setzen der CCU Variable
@@ -181,10 +180,10 @@ print('Es ist morgen ein Feiertag: '+str(feiertag_morgen))
 ############################################################
 if ferien and ferien_morgen:
     print('Es sind Ferien, also lass ich euch in Ruhe')
-    quit()
+    #quit()
 if feiertag_morgen:
     print('Morgen ist Feiertag, also gibts auch nichts, was sich lohnt, anzuschauen.')
-    quit()
+    #quit()
 
 def download(url):
     #return None
