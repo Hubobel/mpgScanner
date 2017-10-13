@@ -62,11 +62,11 @@ if os.path.isfile(pfad+'/mpg/adressen.txt')== True:
     fobj.close()
 
 fradress='carsten.richter77@gmail.com'
-toadress='carsten@hubobel.de'
+toadress='crichter@soka-bau.de'
 sub='das ist der finale Standalonetest'
-anhang = ['adressen.txt','heute.pdf','morgen.pdf']
+anhang = ['heute.pdf','morgen.pdf']
 body = 'lalaland_Teil3'
+bcc=[]
 
-
-Nachricht (fradress,toadress,bcc,'pdfs','und da sind sie',anhang)
+Nachricht (fradress,toadress,'crichter@soka-bau.de',sub, 'und da sind sie\n'+body,anhang)
 print (body+'gdsjfd'+ str(bcc))

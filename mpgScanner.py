@@ -42,12 +42,19 @@ else:
 
 jetzt = int(time.strftime('%j'))
 tag = time.strftime('%d')
+wtag = time.strftime('%w')
+mailzusatz=""
+if wtag == '5':
+    mailzusatz="\n \nEs ist Freitag!\nIch wünsche ein schönes Wochenende.\nNeue Nachrichten kommen erst am Montag wieder."
+
 
 ferien = False
 ferien_morgen = False
 feiertag = False
 feiertag_morgen = False
 
+if feiertag_morgen:
+    mailzusatz='\n \nMorgen ist ein Feiertag.\nNeue Nachrichten erst am nächsten Werktag wieder.\nGenießt die Zeit!'
 
 def Nachricht(passw,fradress, toadress, bccs=[], sub='I am ROOT',body='this comes from Hubobel', attach=[]):
     fromaddr = fradress
@@ -178,12 +185,12 @@ print('Es ist ein Feiertag: '+str(feiertag))
 print('Es ist morgen ein Feiertag: '+str(feiertag_morgen))
 
 ############################################################
-if ferien and ferien_morgen:
+if ferien:
     print('Es sind Ferien, also lass ich euch in Ruhe')
-    #quit()
+    quit()
 if feiertag_morgen:
     print('Morgen ist Feiertag, also gibts auch nichts, was sich lohnt, anzuschauen.')
-    #quit()
+    quit()
 
 def download(url):
     #return None
@@ -275,7 +282,7 @@ toadress='carsten@hubobel.de'
 
 if mail == 1:
 
-    body = 'Es gibt eine aktuelle Version des heutigen Vertretungsplanes.'
+    body = 'Es gibt eine aktuelle Version des heutigen Vertretungsplanes.'+mailzusatz
     anhang = ['heute.pdf']
     sub = 'MPG-heute aktualisiert'
     Nachricht(passw,fradress, toadress, bcc, sub, body, anhang)
@@ -284,7 +291,7 @@ if mail == 1:
         document = open(pfad+'/mpg/heute.pdf', 'rb')
         tb.send_document(chat_id, document, caption=body)
 if mail == 2:
-    body = 'Es gibt eine aktuelle Version des morgigen Vertretungsplanes.'
+    body = 'Es gibt eine aktuelle Version des morgigen Vertretungsplanes.'+mailzusatz
     anhang = ['morgen.pdf']
     sub = 'MPG-morgen aktualisiert'
     Nachricht(passw,fradress, toadress, bcc, sub, body, anhang)
@@ -293,7 +300,7 @@ if mail == 2:
         document = open(pfad + '/mpg/morgen.pdf', 'rb')
         tb.send_document(chat_id, document, caption=body)
 if mail == 3:
-    body = 'Es gibt aktuelle Versionen der MPG-Vertretungspläne.'
+    body = 'Es gibt aktuelle Versionen der MPG-Vertretungspläne.'+mailzusatz
     anhang = ['heute.pdf','morgen.pdf']
     sub = 'MPG-Vertretungspläne aktualisiert'
     Nachricht(passw,fradress, toadress, bcc, sub, body, anhang)
