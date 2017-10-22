@@ -13,6 +13,7 @@ try:
     telegram = True
 except ImportError:
     print('Librarie "telebot" ist nicht installiert. Keine Verwendung von Telegram!!!')
+    print('Installation über: "pip3 install pyTelegramBotAPI"')
     telegram = False
 
 from email.mime.multipart import MIMEMultipart
