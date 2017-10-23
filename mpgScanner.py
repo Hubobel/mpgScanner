@@ -7,9 +7,6 @@ import smtplib
 
 try:
     import telebot
-    TOKEN = '467241832:AAH3e0y6Fm7ig5DtConJP29GsD-zX1psNZo'
-    chat_id = '@mpglu'
-    tb = telebot.TeleBot(TOKEN)
     telegram = True
 except ImportError:
     print('Librarie "telebot" ist nicht installiert. Keine Verwendung von Telegram!!!')
@@ -31,6 +28,11 @@ for line in fobj:
     a = line.rstrip()
     passw.append(a)
 fobj.close()
+
+if telegram:
+    TOKEN = passw[4]
+    chat_id = passw[5]
+    tb = telebot.TeleBot(TOKEN)
 
 url_ferien ='http://api.smartnoob.de/ferien/v1/ferien/?bundesland='+passw[2]
 url_feiertage = 'http://api.smartnoob.de/ferien/v1/feiertage/?bundesland='+passw[2]
