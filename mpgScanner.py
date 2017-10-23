@@ -4,7 +4,6 @@ import time
 import datetime
 import os
 import smtplib
-
 try:
     import telebot
     telegram = True
@@ -12,53 +11,24 @@ except ImportError:
     print('Librarie "telebot" ist nicht installiert. Keine Verwendung von Telegram!!!')
     print('Installation über: "pip3 install pyTelegramBotAPI"')
     telegram = False
-
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 
-
-pfad = os.path.dirname(__file__)
-mail = 0
-
-fobj = open(pfad + "/pass.txt")     #Passwort für den Gmailaccount laden
-passw = []
-for line in fobj:
-    a = line.rstrip()
-    passw.append(a)
-fobj.close()
-
-if telegram:
-    TOKEN = passw[4]
-    chat_id = passw[5]
-    tb = telebot.TeleBot(TOKEN)
-
-url_ferien ='http://api.smartnoob.de/ferien/v1/ferien/?bundesland='+passw[2]
-url_feiertage = 'http://api.smartnoob.de/ferien/v1/feiertage/?bundesland='+passw[2]
-
-if len(passw)>=4:
-    url_ferien_ccu = 'http://'+passw[3]+'/loksoft.exe?ret=dom.GetObject("Ferien").State('
-    ccu = True
-else:
-    ccu = False
-
-jetzt = int(time.strftime('%j'))
-tag = time.strftime('%d')
-wtag = time.strftime('%w')
-mailzusatz=""
-if wtag == '5':
-    mailzusatz="\n \nEs ist Freitag!\nIch wünsche ein schönes Wochenende.\nNeue Nachrichten kommen erst am Montag wieder."
-
-
-ferien = False
-ferien_morgen = False
-feiertag = False
-feiertag_morgen = False
-
-if feiertag_morgen:
-    mailzusatz='\n \nMorgen ist ein Feiertag.\nNeue Nachrichten erst am nächsten Werktag wieder.\nGenießt die Zeit!'
-
+def download(url):
+    #return None
+    filename = pfad+'/mpg/'+url+'.pdf'
+    url = 'http://www.mpglu.de/vps/'+url+'.pdf'
+    req = requests.get(url, auth=('schueler', 'Ing8gresk'))
+    file = open(filename, 'wb')
+    for chunk in req.iter_content(100000):
+        file.write(chunk)
+    file.close()
+    return None
+def modification_date(filename):
+    t = os.path.getmtime(filename)
+    return datetime.datetime.fromtimestamp(t)
 def Nachricht(passw,fradress, toadress, bccs=[], sub='I am ROOT',body='this comes from Hubobel', attach=[]):
     fromaddr = fradress
     toaddr = toadress
@@ -96,6 +66,45 @@ def Nachricht(passw,fradress, toadress, bccs=[], sub='I am ROOT',body='this come
     server.sendmail(fromaddr, bccs, text)
     server.quit()
     return
+def passholen(pfad):
+    fobj = open(pfad + "/pass.txt")  # Passwort für den Gmailaccount laden
+    passw = []
+    for line in fobj:
+        a = line.rstrip()
+        passw.append(a)
+    fobj.close()
+    return passw
+
+pfad = os.path.dirname(__file__)
+mail = 0
+jetzt = int(time.strftime('%j'))
+tag = time.strftime('%d')
+wtag = time.strftime('%w')
+mailzusatz=""
+ferien = False
+ferien_morgen = False
+feiertag = False
+feiertag_morgen = False
+passw = passholen(pfad)
+
+if telegram:
+    TOKEN = passw[4]
+    chat_id = passw[5]
+    tb = telebot.TeleBot(TOKEN)
+
+url_ferien ='http://api.smartnoob.de/ferien/v1/ferien/?bundesland='+passw[2]
+url_feiertage = 'http://api.smartnoob.de/ferien/v1/feiertage/?bundesland='+passw[2]
+
+if len(passw)>=4:
+    url_ferien_ccu = 'http://'+passw[3]+'/loksoft.exe?ret=dom.GetObject("Ferien").State('
+    ccu = True
+else:
+    ccu = False
+if wtag == '5':
+    mailzusatz="\n \nEs ist Freitag!\nIch wünsche ein schönes Wochenende.\nNeue Nachrichten kommen erst am Montag wieder."
+if feiertag_morgen:
+    mailzusatz='\n \nMorgen ist ein Feiertag.\nNeue Nachrichten erst am nächsten Werktag wieder.\nGenießt die Zeit!'
+
 
 if os.path.isdir(pfad+'/mpg')!= True:   #prüfen, ob das UNTERverzeichniss /mpg bereits existiert
     os.makedirs(pfad+'/mpg')
@@ -194,22 +203,6 @@ if ferien:
 if feiertag_morgen:
     print('Morgen ist Feiertag, also gibts auch nichts, was sich lohnt, anzuschauen.')
     quit()
-
-def download(url):
-    #return None
-    filename = pfad+'/mpg/'+url+'.pdf'
-    url = 'http://www.mpglu.de/vps/'+url+'.pdf'
-    req = requests.get(url, auth=('schueler', 'Ing8gresk'))
-    file = open(filename, 'wb')
-    for chunk in req.iter_content(100000):
-        file.write(chunk)
-    file.close()
-    return None
-
-def modification_date(filename):
-    t = os.path.getmtime(filename)
-    return datetime.datetime.fromtimestamp(t)
-
 
 try:
     os.rename(pfad + '/mpg/heute.pdf', pfad +'/mpg/heute1.pdf')
