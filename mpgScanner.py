@@ -101,6 +101,7 @@ if os.path.isfile(pfad+'/pass.json') !=True:
     print(str(passw)+ ' bitte entsprechend befüllen.')
     with open(pfad+'/pass.json', 'w') as fp:
         json.dump(passw, fp, sort_keys=True, indent=4)
+    quit()
 else:
     jsonpass = json_pass_holen(pfad)
 if jsonpass['TOKEN']=='' or jsonpass['Chat_ID']=='':
