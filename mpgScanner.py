@@ -71,11 +71,34 @@ def json_pass_holen(pfad):
         passw = json.load(file)
     passw['Uhrzeit'] = time.strftime("%H:%M:%S")
     passw['Tag_Name'] = time.strftime('%A')
-    passw['Tag_Nummer'] = time.strftime('%w')
+    #passw['Tag_Nummer'] = time.strftime('%w')
     passw['pfad']=pfad
     with open(pfad+'/pass.json', 'w') as fp:
         json.dump(passw, fp, sort_keys=True, indent=4)
     return passw
+def update():
+    with open(pfad+'/pass.json') as file:
+        jsonpass=json.load(file)
+    if 'Tag_Nummer' in jsonpass:
+        print (jsonpass['Tag_Nummer'])
+        if jsonpass['Tag_Nummer']!= wtag:
+            print ('update json mit '+wtag)
+            jsonpass['Tag_Nummer']=wtag
+            url_zitat = 'https://taeglicheszit.at/zitat-api.php?format=json'
+            resp_zitat = requests.get(url_zitat)
+            data_zitat = resp_zitat.json()
+            jsonpass['zitat']=data_zitat['zitat']
+            jsonpass['autor']=data_zitat['autor']
+            with open(pfad+'/pass.json', 'w') as fp:
+                json.dump(jsonpass, fp, sort_keys=True, indent=4)
+            return True
+        else:
+            print('kein Update')
+            return False
+    else:
+        jsonpass['Tag_Nummer']=''
+        with open(pfad+'/pass.json', 'w') as fp:
+            json.dump(jsonpass, fp, sort_keys=True, indent=4)
 
 pfad = os.path.dirname(__file__)
 mail = 0
@@ -97,7 +120,8 @@ if os.path.isfile(pfad+'/pass.json') !=True:
            "mpg_user": "",
            "mpg_pass": "",
            "Chat_ID": "","TOKEN": "",
-           "ccu_ip": "","Land": "rp"}
+           "ccu_ip": "","Land": "rp",
+           "Wochentag": ""}
     print(str(passw)+ ' bitte entsprechend befüllen.')
     with open(pfad+'/pass.json', 'w') as fp:
         json.dump(passw, fp, sort_keys=True, indent=4)
@@ -118,38 +142,33 @@ if os.path.isfile(pfad+'/mpg/adressen.txt'):
         bcc.append(a)
     fobj.close()
 
-
-url_ferien ='http://api.smartnoob.de/ferien/v1/ferien/?bundesland='+jsonpass['Land']
-url_feiertage = 'http://api.smartnoob.de/ferien/v1/feiertage/?bundesland='+jsonpass['Land']
-
 if jsonpass['ccu_ip']!='':
     url_ferien_ccu = 'http://'+jsonpass['ccu_ip']+'/loksoft.exe?ret=dom.GetObject("Ferien").State('
     ccu = True
 else:
     ccu = False
-if wtag == '5':
-    mailzusatz="\n \nEs ist Freitag!\nIch wünsche ein schönes Wochenende.\nNeue Nachrichten kommen erst am Montag wieder."
-if feiertag_morgen:
-    mailzusatz='\n \nMorgen ist ein Feiertag.\nNeue Nachrichten erst am nächsten Werktag wieder.\nGenießt die Zeit!'
+
 if os.path.isdir(pfad+'/mpg')!= True:   #prüfen, ob das UNTERverzeichniss /mpg bereits existiert
     os.makedirs(pfad+'/mpg')
     print ('Downloadverzeichniss bei '+pfad +' /mpg/ created!!!')
 
-if int(tag) == 1:       #Update einmal pro Monat
+if int(tag) == 1:       #Update einmal pro Monat (Ferien)
     print("It´s Update Time!!!")
+    url_ferien = 'http://api.smartnoob.de/ferien/v1/ferien/?bundesland=' + jsonpass['Land']
+    url_feiertage = 'http://api.smartnoob.de/ferien/v1/feiertage/?bundesland=' + jsonpass['Land']
     resp_ferien = requests.get(url_ferien)
     resp_feiertage = requests.get(url_feiertage)
     data_ferien = resp_ferien.json()
     data_feiertage = resp_feiertage.json()
-
     with open(pfad + '/mpg/json_ferien.data', 'w') as outfile:
         json.dump(data_ferien, outfile)
-
     with open(pfad + '/mpg/json_feiertage.data', 'w') as outfile:
         json.dump(data_feiertage, outfile)
 
 if os.path.isfile(pfad+'/mpg/json_ferien.data')!= True:     #Download der jsons, falls diese lokal nicht existieren
     print('The json_xxx.datas not found, will try to download them from the API')
+    url_ferien = 'http://api.smartnoob.de/ferien/v1/ferien/?bundesland=' + jsonpass['Land']
+    url_feiertage = 'http://api.smartnoob.de/ferien/v1/feiertage/?bundesland=' + jsonpass['Land']
     resp_ferien = requests.get(url_ferien)
     resp_feiertage = requests.get(url_feiertage)
     data_ferien = resp_ferien.json()
@@ -218,6 +237,24 @@ print('Es sind morgen Ferien: '+ str(ferien_morgen))
 print('Es ist ein Feiertag: '+str(feiertag))
 print('Es ist morgen ein Feiertag: '+str(feiertag_morgen))
 
+if update():
+    print ('Neuer Tag, neues Gluck!')
+    if wtag == '2':
+        mailzusatz = '\n \nDer Montag liegt hinter uns.\nAb heuteb kann es  nur noch aufwärts gehen!' \
+                     '\nViel Spass, bei allem, was ihr so treibt\n'+jsonpass['zitat']
+    if wtag == '3':
+        mailzusatz = '\n \nHallo Mittwoch!\nIch wünsche eine schöne Wochenmitte.\nKopf hoch! ' \
+                     'Das Wochenende naht!\n' + jsonpass['zitat']
+    if wtag == '4':
+        mailzusatz = '\n \nDer Donnerstag ist bekanntlich der \'kleine Freitag\'' \
+                     '\nNur noch einmal (!) Gas geben!\n' + jsonpass['zitat']
+    if wtag == '5':
+        mailzusatz = '\n \nEs ist Freitag!\nIch wünsche ein schönes Wochenende.' \
+                     '\nNeue Nachrichten kommen erst am Montag wieder.\n' + jsonpass['zitat']
+else:
+    print ('im Westen nix neues')
+if feiertag_morgen:
+    mailzusatz='\n \nMorgen ist ein Feiertag.\nNeue Nachrichten erst am nächsten Werktag wieder.\nGenießt die Zeit!'
 ############################################################
 if ferien:
     print('Es sind Ferien, also lass ich euch in Ruhe')
