@@ -20,7 +20,7 @@ def download(url):
     #return None
     filename = pfad+'/mpg/'+url+'.pdf'
     url = 'http://www.mpglu.de/vps/'+url+'.pdf'
-    req = requests.get(url, auth=('schueler', 'Ing8gresk'))
+    req = requests.get(url, auth=(jsonpass['mpg_user'], jsonpass['mpg_pass']))
     file = open(filename, 'wb')
     for chunk in req.iter_content(100000):
         file.write(chunk)
@@ -66,14 +66,6 @@ def Nachricht(fradress, toadress, bccs=[], sub='I am ROOT',body='this comes from
     server.sendmail(fromaddr, bccs, text)
     server.quit()
     return
-def passholen(pfad):
-    fobj = open(pfad + "/pass.txt")  # Passwort für den Gmailaccount laden
-    passw = []
-    for line in fobj:
-        a = line.rstrip()
-        passw.append(a)
-    fobj.close()
-    return passw
 def json_pass_holen(pfad):
     with open(pfad+'/pass.json') as file:
         passw = json.load(file)
@@ -95,13 +87,24 @@ ferien = False
 ferien_morgen = False
 feiertag = False
 feiertag_morgen = False
-passw = passholen(pfad)
-jsonpass=json_pass_holen(pfad)
 fradress='carsten.richter77@gmail.com'
 toadress='carsten@hubobel.de'
-print(jsonpass)
-print(passw)
 
+if os.path.isfile(pfad+'/pass.json') !=True:
+    print('"pass.json" scheint es nicht zu geben.')
+    print('Ich lege eine neue Datei "pass.json" an.')
+    passw={"gmail_pass": "","gmail_user": "",
+           "mpg_user": "",
+           "mpg_pass": "",
+           "Chat_ID": "","TOKEN": "",
+           "ccu_ip": "","Land": "rp"}
+    print(str(passw)+ ' bitte entsprechend befüllen.')
+    with open(pfad+'/pass.json', 'w') as fp:
+        json.dump(passw, fp, sort_keys=True, indent=4)
+else:
+    jsonpass = json_pass_holen(pfad)
+if jsonpass['TOKEN']=='' or jsonpass['Chat_ID']=='':
+    telegram=False
 if telegram:
     TOKEN = jsonpass['TOKEN']
     chat_id = jsonpass['Chat_ID']
@@ -113,6 +116,8 @@ if os.path.isfile(pfad+'/mpg/adressen.txt'):
         a = line.rstrip()
         bcc.append(a)
     fobj.close()
+
+
 url_ferien ='http://api.smartnoob.de/ferien/v1/ferien/?bundesland='+jsonpass['Land']
 url_feiertage = 'http://api.smartnoob.de/ferien/v1/feiertage/?bundesland='+jsonpass['Land']
 
