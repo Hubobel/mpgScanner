@@ -23,6 +23,18 @@ Weiterhin muss auf dem ausführenden System die Pythonbiliothek "pyTelegramBotAP
 * sollte pip noch nicht installiert sein: "sudo apt-get installe python3-pip"
 * pip3 install pyTelegramBotAPI
   
+Bsp. für eine leere pass.json, wie sie automatisch nach dem ersten Start angelegt wird:
+
+{
+    "Chat_ID": "",
+    "Land": "rp",
+    "TOKEN": "",
+    "ccu_ip": "",
+    "gmail_pass": "",
+    "gmail_user": "",
+    "mpg_pass": "",
+    "mpg_user": ""
+}
 # Benutzung
 
 Das Programm wird am besten über einen Cronjob periodisch aufgerufen, z.Bsp. Stündlich, immer zur halben Stunde, im Zeitraum von 7 bis 15 Uhr, an den Werk(Schul-)tagen Montag bis Freitag.
