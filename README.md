@@ -11,17 +11,17 @@ Das File downloaden und in einen beliebigen Ordner, in welchem man natürlich Sc
 Nach dem ersten Start wird automatisch eine Datei pass.json im gleichen Verzeichniss erstellt und die Anwendung beendet sich selbst.
 Nun müssen folgende Angaben innerhalb dieser 'pass.json' gemacht werden:
 
-- "gmail_pass":Passwort für den eigenen G-Mail Account (wird zum Versenden der PDF´s benötigt)
-- "gmail_user":eigene Emailadresse des für die versendung zuständigen Accounts
-- "Land":Europäisches Kürzel für den eignen Wohnort (wird zur Ermittlung der Feier- und Ferientage benötigt. z.Bsp. RP für RheinlandPfalz)
--"TOKEN":der Usertoken des Telegrammessengers (optional)
--"Chat_ID":Chat_ID des Telegrammessengers (optional)
--"ccu_ip":IP der CCU-Zentrale der Hausautomation 'Homematic' (optional)
+* "gmail_pass":Passwort für den eigenen G-Mail Account (wird zum Versenden der PDF´s benötigt)
+* "gmail_user":eigene Emailadresse des für die versendung zuständigen Accounts
+* "Land":Europäisches Kürzel für den eignen Wohnort (z.Bsp. RP für RheinlandPfalz)
+* "TOKEN":der Usertoken des Telegrammessengers (optional)
+* "Chat_ID":Chat_ID des Telegrammessengers (optional)
+* "ccu_ip":IP der CCU-Zentrale der Hausautomation 'Homematic' (optional)
 
 Weiterhin muss auf dem ausführenden System die Pythonbiliothek "pyTelegramBotAPI" installiert sein (wenn man Telegram nutzen möchte, sonst wird diese Funktion automatisch deaktiviert:
 
-  -sollte pip noch nicht installiert sein: "sudo apt-get installe python3-pip"
-  -pip3 install pyTelegramBotAPI
+* sollte pip noch nicht installiert sein: "sudo apt-get installe python3-pip"
+* pip3 install pyTelegramBotAPI
   
 # Benutzung
 
