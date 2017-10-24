@@ -1,6 +1,6 @@
 
 # mpgScanner
-holt die Vertretungspläne vom Schulserver und verschickt diese, sollten Aktualisierungen vorliegen, dann per Mail an beliebige viele
+holt die Vertretungspläne vom Schulserver und verschickt diese, sollten Aktualisierungen vorliegen, dann per Mail und/oder Telegram-Messenger an beliebige viele
 Empfänger (via Blindcopy, BCC),in Abhänigkeit davon, ob gerade Ferien oder ein Feiertag sind.
 Für Nutzer der Hausautomation "Homematic": Es wird eine Systemvariable "Ferien" automatisch auf "True" bzw "False" gesetzt, wenn man dies möchte.
 
@@ -8,17 +8,20 @@ Für Nutzer der Hausautomation "Homematic": Es wird eine Systemvariable "Ferien"
 # Installation
 
 Das File downloaden und in einen beliebigen Ordner, in welchem man natürlich Schreibrechte besitzen muss, stecken.
-Im gleichen Ordner muss eine neue Datei, mit dem Namen 'pass.txt', erstellt werden.
-Hierin werden nun Zeilenweise die folgenden Angaben gemacht:
+Nach dem ersten Start wird automatisch eine Datei pass.json im gleichen Verzeichniss erstellt und die Anwendung beendet sich selbst.
+Nun müssen folgende Angaben innerhalb dieser 'pass.json' gemacht werden:
 
-- Passwort für den eigenen G-Mail Account (wird zum Versenden der PDF´s benötigt)
-- eigene Emailadresse des für die versendung zuständigen Accounts
-- Europäisches Kürzel für den eignen Wohnort (wird zur Ermittlung der Feier- und Ferientage benötigt. z.Bsp. RP für RheinlandPfalz)
+* "gmail_pass":Passwort für den eigenen G-Mail Account (wird zum Versenden der PDF´s benötigt)
+* "gmail_user":eigene Emailadresse des für die versendung zuständigen Accounts
+* "Land":Europäisches Kürzel für den eignen Wohnort (z.Bsp. RP für RheinlandPfalz)
+* "TOKEN":der Usertoken des Telegrammessengers (optional)
+* "Chat_ID":Chat_ID des Telegrammessengers (optional)
+* "ccu_ip":IP der CCU-Zentrale der Hausautomation 'Homematic' (optional)
 
 Weiterhin muss auf dem ausführenden System die Pythonbiliothek "pyTelegramBotAPI" installiert sein (wenn man Telegram nutzen möchte, sonst wird diese Funktion automatisch deaktiviert:
 
-  -sollte pip noch nicht installiert sein: "sudo apt-get installe python3-pip"
-  -pip3 install pyTelegramBotAPI
+* sollte pip noch nicht installiert sein: "sudo apt-get installe python3-pip"
+* pip3 install pyTelegramBotAPI
   
 # Benutzung
 
