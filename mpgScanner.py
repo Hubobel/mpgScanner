@@ -29,14 +29,14 @@ def download(url):
 def modification_date(filename):
     t = os.path.getmtime(filename)
     return datetime.datetime.fromtimestamp(t)
-def Nachricht(passw,fradress, toadress, bccs=[], sub='I am ROOT',body='this comes from Hubobel', attach=[]):
+def Nachricht(fradress, toadress, bccs=[], sub='I am ROOT',body='this comes from Hubobel', attach=[]):
     fromaddr = fradress
     toaddr = toadress
     if bccs==[]:
         bccs = toadress
 
-    pwd = passw[0]
-    acc = passw[1]
+    pwd = jsonpass['gmail_pass']
+    acc = jsonpass['gmail_user']
 
     msg = MIMEMultipart()
 
@@ -74,6 +74,16 @@ def passholen(pfad):
         passw.append(a)
     fobj.close()
     return passw
+def json_pass_holen(pfad):
+    with open(pfad+'/pass.json') as file:
+        passw = json.load(file)
+    passw['Uhrzeit'] = time.strftime("%H:%M:%S")
+    passw['Tag_Name'] = time.strftime('%A')
+    passw['Tag_Nummer'] = time.strftime('%w')
+    passw['pfad']=pfad
+    with open(pfad+'/pass.json', 'w') as fp:
+        json.dump(passw, fp, sort_keys=True, indent=4)
+    return passw
 
 pfad = os.path.dirname(__file__)
 mail = 0
@@ -86,17 +96,28 @@ ferien_morgen = False
 feiertag = False
 feiertag_morgen = False
 passw = passholen(pfad)
+jsonpass=json_pass_holen(pfad)
+fradress='carsten.richter77@gmail.com'
+toadress='carsten@hubobel.de'
+print(jsonpass)
+print(passw)
 
 if telegram:
-    TOKEN = passw[4]
-    chat_id = passw[5]
+    TOKEN = jsonpass['TOKEN']
+    chat_id = jsonpass['Chat_ID']
     tb = telebot.TeleBot(TOKEN)
+if os.path.isfile(pfad+'/mpg/adressen.txt'):
+    fobj = open(pfad + "/mpg/adressen.txt")
+    bcc = []
+    for line in fobj:
+        a = line.rstrip()
+        bcc.append(a)
+    fobj.close()
+url_ferien ='http://api.smartnoob.de/ferien/v1/ferien/?bundesland='+jsonpass['Land']
+url_feiertage = 'http://api.smartnoob.de/ferien/v1/feiertage/?bundesland='+jsonpass['Land']
 
-url_ferien ='http://api.smartnoob.de/ferien/v1/ferien/?bundesland='+passw[2]
-url_feiertage = 'http://api.smartnoob.de/ferien/v1/feiertage/?bundesland='+passw[2]
-
-if len(passw)>=4:
-    url_ferien_ccu = 'http://'+passw[3]+'/loksoft.exe?ret=dom.GetObject("Ferien").State('
+if jsonpass['ccu_ip']!='':
+    url_ferien_ccu = 'http://'+jsonpass['ccu_ip']+'/loksoft.exe?ret=dom.GetObject("Ferien").State('
     ccu = True
 else:
     ccu = False
@@ -104,8 +125,6 @@ if wtag == '5':
     mailzusatz="\n \nEs ist Freitag!\nIch wünsche ein schönes Wochenende.\nNeue Nachrichten kommen erst am Montag wieder."
 if feiertag_morgen:
     mailzusatz='\n \nMorgen ist ein Feiertag.\nNeue Nachrichten erst am nächsten Werktag wieder.\nGenießt die Zeit!'
-
-
 if os.path.isdir(pfad+'/mpg')!= True:   #prüfen, ob das UNTERverzeichniss /mpg bereits existiert
     os.makedirs(pfad+'/mpg')
     print ('Downloadverzeichniss bei '+pfad +' /mpg/ created!!!')
@@ -125,15 +144,12 @@ if int(tag) == 1:       #Update einmal pro Monat
 
 if os.path.isfile(pfad+'/mpg/json_ferien.data')!= True:     #Download der jsons, falls diese lokal nicht existieren
     print('The json_xxx.datas not found, will try to download them from the API')
-
     resp_ferien = requests.get(url_ferien)
     resp_feiertage = requests.get(url_feiertage)
     data_ferien = resp_ferien.json()
     data_feiertage = resp_feiertage.json()
-
     with open(pfad+'/mpg/json_ferien.data','w') as outfile:
         json.dump(data_ferien, outfile)
-
     with open(pfad+'/mpg/json_feiertage.data','w') as outfile:
         json.dump(data_feiertage, outfile)
 
@@ -259,17 +275,7 @@ except FileNotFoundError:
     url = 'morgen'
     download(url)
 
-if os.path.isfile(pfad+'/mpg/adressen.txt')== True:
 
-    fobj = open(pfad + "/mpg/adressen.txt")
-    bcc = []
-    for line in fobj:
-        a = line.rstrip()
-        bcc.append(a)
-    fobj.close()
-
-fradress='carsten.richter77@gmail.com'
-toadress='carsten@hubobel.de'
 
 #sub='Hier kommt der Betreff rein'
 #body = 'hier der Mailtext'
@@ -277,12 +283,12 @@ toadress='carsten@hubobel.de'
 #Nachricht (fradress,toadress,bcc,sub,body,anhang)
 
 if mail == 1:
-
     body = 'Es gibt eine aktuelle Version des heutigen Vertretungsplanes.'+mailzusatz
     anhang = ['heute.pdf']
     sub = 'MPG-heute aktualisiert'
-    Nachricht(passw,fradress, toadress, bcc, sub, body, anhang)
-    print (body+' ich versende das mal an: '+str(bcc))
+    if os.path.isfile(pfad + '/mpg/adressen.txt'):
+        Nachricht(fradress, toadress, bcc, sub, body, anhang)
+        print (body+' ich versende das mal an: '+str(bcc))
     if telegram:
         document = open(pfad+'/mpg/heute.pdf', 'rb')
         tb.send_document(chat_id, document, caption=body)
@@ -290,8 +296,9 @@ if mail == 2:
     body = 'Es gibt eine aktuelle Version des morgigen Vertretungsplanes.'+mailzusatz
     anhang = ['morgen.pdf']
     sub = 'MPG-morgen aktualisiert'
-    Nachricht(passw,fradress, toadress, bcc, sub, body, anhang)
-    print(body + ' ich versende das mal an: ' + str(bcc))
+    if os.path.isfile(pfad + '/mpg/adressen.txt'):
+        Nachricht(fradress, toadress, bcc, sub, body, anhang)
+        print (body+' ich versende das mal an: '+str(bcc))
     if telegram:
         document = open(pfad + '/mpg/morgen.pdf', 'rb')
         tb.send_document(chat_id, document, caption=body)
@@ -299,8 +306,9 @@ if mail == 3:
     body = 'Es gibt aktuelle Versionen der MPG-Vertretungspläne.'+mailzusatz
     anhang = ['heute.pdf','morgen.pdf']
     sub = 'MPG-Vertretungspläne aktualisiert'
-    Nachricht(passw,fradress, toadress, bcc, sub, body, anhang)
-    print(body + ' ich versende das mal an: ' + str(bcc))
+    if os.path.isfile(pfad + '/mpg/adressen.txt'):
+        Nachricht(fradress, toadress, bcc, sub, body, anhang)
+        print (body+' ich versende das mal an: '+str(bcc))
     if telegram:
         document = open(pfad + '/mpg/heute.pdf', 'rb')
         tb.send_document(chat_id, document, caption=body)
