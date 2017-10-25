@@ -79,10 +79,10 @@ def json_pass_holen(pfad):
 def update():
     with open(pfad+'/pass.json') as file:
         jsonpass=json.load(file)
-    if 'Tag_Nummer' in jsonpass:
+    if 'Tag_Nummer' in jsonpass or jsonpass['debug']=='True':
         print (jsonpass['Tag_Nummer'])
-        if jsonpass['Tag_Nummer']!= wtag:
-            print ('update json mit '+wtag)
+        if jsonpass['Tag_Nummer']!= wtag or jsonpass['debug']=="True":
+            print ('update json mit '+str(wtag))
             jsonpass['Tag_Nummer']=wtag
             url_zitat = 'https://taeglicheszit.at/zitat-api.php?format=json'
             resp_zitat = requests.get(url_zitat)
@@ -321,8 +321,6 @@ except FileNotFoundError:
     url = 'morgen'
     download(url)
 
-
-
 #sub='Hier kommt der Betreff rein'
 #body = 'hier der Mailtext'
 #anhang = ['adressen.txt','heute.pdf','morgen.pdf']
@@ -330,15 +328,14 @@ except FileNotFoundError:
 
 if jsonpass['debug']=="True":
     print('DEBUG_MODE')
-    mail=3
-    bcc='schneeschieben@web.de'
+    bcc=jsonpass['debug_adress']
     TOKEN = jsonpass['debug_TOKEN']
     chat_id = jsonpass['debug_Chat_ID']
     tb = telebot.TeleBot(TOKEN)
     mailzusatz = '\n \nDies ist eine Testnachricht!\nDer Versand erfolgt nur an Hubobel und schneeschieben.\n\n' \
                  'Zitat des Tages:\n'+ jsonpass['zitat']+'\nAutor: '+jsonpass['autor']+'\n'
 
-if mail == 1:
+if mail == 1 or jsonpass['debug']=='True':
     body = 'Es gibt eine aktuelle Version des heutigen Vertretungsplanes.'+mailzusatz
     anhang = ['heute.pdf']
     sub = 'MPG-heute aktualisiert'
@@ -350,7 +347,7 @@ if mail == 1:
         tb.send_document(chat_id, document, caption='Es gibt eine aktuelle Version des heutigen Vertretungsplanes.')
         if mailzusatz!='':
             tb.send_message(chat_id, mailzusatz)
-if mail == 2:
+if mail == 2 or jsonpass['debug']=='True':
     body = 'Es gibt eine aktuelle Version des morgigen Vertretungsplanes.'+mailzusatz
     anhang = ['morgen.pdf']
     sub = 'MPG-morgen aktualisiert'
@@ -362,7 +359,7 @@ if mail == 2:
         tb.send_document(chat_id, document, caption='Es gibt eine aktuelle Version des morgigen Vertretungsplanes.')
         if mailzusatz!='':
             tb.send_message(chat_id, mailzusatz)
-if mail == 3:
+if mail == 3 or jsonpass['debug']=='True':
     body = 'Es gibt aktuelle Versionen der MPG-Vertretungspläne.'+mailzusatz
     anhang = ['heute.pdf','morgen.pdf']
     sub = 'MPG-Vertretungspläne aktualisiert'
