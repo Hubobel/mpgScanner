@@ -244,13 +244,16 @@ if update():
                      '\nViel Spass, bei allem, was ihr so treibt\n'+jsonpass['zitat']
     if wtag == '3':
         mailzusatz = '\n \nHallo Mittwoch!\nIch wünsche eine schöne Wochenmitte.\nKopf hoch! ' \
-                     'Das Wochenende naht!\n' + jsonpass['zitat']
+                     'Das Wochenende naht!\n' + 'Zitat des Tages:\n'+ jsonpass['zitat']+ \
+                     "\nAutor: " + jsonpass['autor'] + '\n'
     if wtag == '4':
         mailzusatz = '\n \nDer Donnerstag ist bekanntlich der \'kleine Freitag\'' \
-                     '\nNur noch einmal (!) Gas geben!\n' + jsonpass['zitat']
+                     '\nNur noch einmal (!) Gas geben!\n' 'Zitat des Tages:\n'+ jsonpass['zitat']+\
+                     '\nAutor: '+jsonpass['autor']+'\n'
     if wtag == '5':
         mailzusatz = '\n \nEs ist Freitag!\nIch wünsche ein schönes Wochenende.' \
-                     '\nNeue Nachrichten kommen erst am Montag wieder.\n' + jsonpass['zitat']
+                     '\nNeue Nachrichten kommen erst am Montag wieder.\n' 'Zitat des Tages:\n'+ jsonpass['zitat']+\
+                     '\nAutor: '+jsonpass['autor']+'\n'
 else:
     print ('im Westen nix neues')
 if feiertag_morgen:
@@ -325,6 +328,16 @@ except FileNotFoundError:
 #anhang = ['adressen.txt','heute.pdf','morgen.pdf']
 #Nachricht (fradress,toadress,bcc,sub,body,anhang)
 
+if jsonpass['debug']=="True":
+    print('DEBUG_MODE')
+    mail=3
+    bcc='schneeschieben@web.de'
+    TOKEN = jsonpass['debug_TOKEN']
+    chat_id = jsonpass['debug_Chat_ID']
+    tb = telebot.TeleBot(TOKEN)
+    mailzusatz = '\n \nDies ist eine Testnachricht!\nDer Versand erfolgt nur an Hubobel und schneeschieben.\n\n' \
+                 'Zitat des Tages:\n'+ jsonpass['zitat']+'\nAutor: '+jsonpass['autor']+'\n'
+
 if mail == 1:
     body = 'Es gibt eine aktuelle Version des heutigen Vertretungsplanes.'+mailzusatz
     anhang = ['heute.pdf']
@@ -334,7 +347,9 @@ if mail == 1:
         print (body+' ich versende das mal an: '+str(bcc))
     if telegram:
         document = open(pfad+'/mpg/heute.pdf', 'rb')
-        tb.send_document(chat_id, document, caption=body)
+        tb.send_document(chat_id, document, caption='Es gibt eine aktuelle Version des heutigen Vertretungsplanes.')
+        if mailzusatz!='':
+            tb.send_message(chat_id, mailzusatz)
 if mail == 2:
     body = 'Es gibt eine aktuelle Version des morgigen Vertretungsplanes.'+mailzusatz
     anhang = ['morgen.pdf']
@@ -344,7 +359,9 @@ if mail == 2:
         print (body+' ich versende das mal an: '+str(bcc))
     if telegram:
         document = open(pfad + '/mpg/morgen.pdf', 'rb')
-        tb.send_document(chat_id, document, caption=body)
+        tb.send_document(chat_id, document, caption='Es gibt eine aktuelle Version des morgigen Vertretungsplanes.')
+        if mailzusatz!='':
+            tb.send_message(chat_id, mailzusatz)
 if mail == 3:
     body = 'Es gibt aktuelle Versionen der MPG-Vertretungspläne.'+mailzusatz
     anhang = ['heute.pdf','morgen.pdf']
@@ -354,6 +371,7 @@ if mail == 3:
         print (body+' ich versende das mal an: '+str(bcc))
     if telegram:
         document = open(pfad + '/mpg/heute.pdf', 'rb')
-        tb.send_document(chat_id, document, caption=body)
+        tb.send_document(chat_id, document, caption='Es gibt aktuelle Versionen der MPG-Vertretungspläne.')
         document = open(pfad + '/mpg/morgen.pdf', 'rb')
         tb.send_document(chat_id, document)
+        tb.send_message(chat_id,mailzusatz)
