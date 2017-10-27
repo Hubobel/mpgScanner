@@ -77,13 +77,14 @@ def json_pass_holen(pfad):
         json.dump(passw, fp, sort_keys=True, indent=4)
     return passw
 def update():
+    global jsonpass
     with open(pfad+'/pass.json') as file:
         jsonpass=json.load(file)
     if 'Tag_Nummer' in jsonpass or jsonpass['debug']=='True':
         print (jsonpass['Tag_Nummer'])
         if jsonpass['Tag_Nummer']!= wtag or jsonpass['debug']=="True":
             print ('update json mit '+str(wtag))
-            jsonpass['Tag_Nummer']=wtag
+            jsonpass['Tag_Nummer']=str(wtag)
             url_zitat = 'https://taeglicheszit.at/zitat-api.php?format=json'
             resp_zitat = requests.get(url_zitat)
             data_zitat = resp_zitat.json()
@@ -91,7 +92,7 @@ def update():
             jsonpass['autor']=data_zitat['autor']
             with open(pfad+'/pass.json', 'w') as fp:
                 json.dump(jsonpass, fp, sort_keys=True, indent=4)
-            return True
+            return True, jsonpass
         else:
             print('kein Update')
             return False
@@ -237,25 +238,6 @@ print('Es sind morgen Ferien: '+ str(ferien_morgen))
 print('Es ist ein Feiertag: '+str(feiertag))
 print('Es ist morgen ein Feiertag: '+str(feiertag_morgen))
 
-if update():
-    print ('Neuer Tag, neues Gluck!')
-    if wtag == '2':
-        mailzusatz = '\n \nDer Montag liegt hinter uns.\nAb heuteb kann es  nur noch aufwärts gehen!' \
-                     '\nViel Spass, bei allem, was ihr so treibt\n'+jsonpass['zitat']
-    if wtag == '3':
-        mailzusatz = '\n \nHallo Mittwoch!\nIch wünsche eine schöne Wochenmitte.\nKopf hoch! ' \
-                     'Das Wochenende naht!\n' + 'Zitat des Tages:\n'+ jsonpass['zitat']+ \
-                     "\nAutor: " + jsonpass['autor'] + '\n'
-    if wtag == '4':
-        mailzusatz = '\n \nDer Donnerstag ist bekanntlich der \'kleine Freitag\'' \
-                     '\nNur noch einmal (!) Gas geben!\n' 'Zitat des Tages:\n'+ jsonpass['zitat']+\
-                     '\nAutor: '+jsonpass['autor']+'\n'
-    if wtag == '5':
-        mailzusatz = '\n \nEs ist Freitag!\nIch wünsche ein schönes Wochenende.' \
-                     '\nNeue Nachrichten kommen erst am Montag wieder.\n' 'Zitat des Tages:\n'+ jsonpass['zitat']+\
-                     '\nAutor: '+jsonpass['autor']+'\n'
-else:
-    print ('im Westen nix neues')
 if feiertag_morgen:
     mailzusatz='\n \nMorgen ist ein Feiertag.\nNeue Nachrichten erst am nächsten Werktag wieder.\nGenießt die Zeit!'
 ############################################################
@@ -326,7 +308,36 @@ except FileNotFoundError:
 #anhang = ['adressen.txt','heute.pdf','morgen.pdf']
 #Nachricht (fradress,toadress,bcc,sub,body,anhang)
 
+if mail!=0:
+    if update():
+        print ('Neuer Tag, neues Gluck!')
+        if wtag == '1':
+            mailzusatz = '\n \nWillkommen in der ' + str(time.strftime('%W')) + '.Kalenderwoche.' + \
+                         '\nNicht verzagen, nur Druck formt aus Kohle einen Diamanten!' \
+                         '\nZitat des Tages:\n'+ jsonpass['zitat']+ \
+                         '\nAutor: ' + jsonpass['autor'] + '\n'
+        if wtag == '2':
+            mailzusatz = '\n \nDer Montag liegt hinter uns.\nAb heuteb kann es  nur noch aufwärts gehen!' \
+                         '\nViel Spass, bei allem, was ihr so treibt\n'+ \
+                         '\nZitat des Tages:\n'+ jsonpass['zitat']+ \
+                         "\nAutor: " + jsonpass['autor'] + '\n'
+        if wtag == '3':
+            mailzusatz = '\n \nHallo Mittwoch!\nIch wünsche eine schöne Wochenmitte.\nKopf hoch! ' \
+                         'Das Wochenende naht!\n' + '\nZitat des Tages:\n'+ jsonpass['zitat']+ \
+                         "\nAutor: " + jsonpass['autor'] + '\n'
+        if wtag == '4':
+            mailzusatz = '\n \nDer Donnerstag ist bekanntlich der \'kleine Freitag\'' \
+                         '\nNur noch einmal (!) Gas geben!\n' '\nZitat des Tages:\n'+ jsonpass['zitat']+\
+                         '\nAutor: '+jsonpass['autor']+'\n'
+        if wtag == '5':
+            mailzusatz = '\n \nEs ist Freitag!\nIch wünsche ein schönes Wochenende.' \
+                         '\nNeue Nachrichten kommen erst am Montag wieder.\n' '\nZitat des Tages:\n'+ jsonpass['zitat']+\
+                         '\nAutor: '+jsonpass['autor']+'\n'
+    else:
+        print ('im Westen nix neues')
+print(mailzusatz)
 if jsonpass['debug']=="True":
+    update()
     print('DEBUG_MODE')
     bcc=jsonpass['debug_adress']
     TOKEN = jsonpass['debug_TOKEN']
@@ -371,4 +382,5 @@ if mail == 3 or jsonpass['debug']=='True':
         tb.send_document(chat_id, document, caption='Es gibt aktuelle Versionen der MPG-Vertretungspläne.')
         document = open(pfad + '/mpg/morgen.pdf', 'rb')
         tb.send_document(chat_id, document)
-        tb.send_message(chat_id,mailzusatz)
+        if mailzusatz != '':
+            tb.send_message(chat_id,mailzusatz)
