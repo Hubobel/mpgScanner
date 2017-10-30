@@ -229,7 +229,7 @@ while x <a:
 
     if jetzt <= ende and jetzt >= beginn:
         feiertag = True
-    if jetzt-1 == beginn:
+    if jetzt+1 == beginn:
         feiertag_morgen = True
     x = x+1
 
