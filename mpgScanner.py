@@ -16,7 +16,7 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 
-def download(url):
+def Download(url):
     #return None
     filename = pfad+'/mpg/'+url+'.pdf'
     url = 'http://www.mpglu.de/vps/'+url+'.pdf'
@@ -259,7 +259,7 @@ if feiertag_morgen:
 try:
     os.rename(pfad + '/mpg/heute.pdf', pfad +'/mpg/heute1.pdf')
     url = 'heute'
-    download(url)
+    Download(url)
     x = os.stat(pfad+'/mpg/heute.pdf')
     x = x.st_size
     x1 = str(x)
@@ -282,12 +282,12 @@ except FileNotFoundError:
     print("File Heute.PDF not found")
     print("Will try to download it from the MPG-Server")
     url = 'heute'
-    download(url)
+    Download(url)
 
 try:
     os.rename(pfad+'/mpg/morgen.pdf', pfad+'/mpg/morgen1.pdf')
     url = 'morgen'
-    download(url)
+    Download(url)
     x = os.stat(pfad+'/mpg/morgen.pdf')
     x = x.st_size
     x1 = str(x)
@@ -309,7 +309,7 @@ except FileNotFoundError:
     print("File Morgen.PDF not found")
     print("Will try to download it from the MPG-Server")
     url = 'morgen'
-    download(url)
+    Download(url)
 
 #sub='Hier kommt der Betreff rein'
 #body = 'hier der Mailtext'
@@ -343,7 +343,7 @@ if mail!=0:
                          '\nAutor: '+jsonpass['autor']+'\n'
     else:
         print ('im Westen nix neues')
-print(mailzusatz)
+
 if jsonpass['debug']=="True":
     update()
     print('DEBUG_MODE')
@@ -353,10 +353,17 @@ if jsonpass['debug']=="True":
     tb = telebot.TeleBot(TOKEN)
     mailzusatz = mailzusatz + '\n \nDies ist eine Testnachricht!\nDer Versand erfolgt nur an Hubobel und schneeschieben.\n\n' \
                  'Zitat des Tages:\n'+ jsonpass['zitat']+'\nAutor: '+jsonpass['autor']+'\n'
-
-temperatur,wetter,feuchte=Wetter()
-bericht='\nAktuell haben wir in Ludwigshafen '+str(temperatur)+' Grad Celsius bei '+str(feuchte)\
-        +' Luftfeuchtigkeit.\nDer Himmel ist '+str(wetter)+'.'
+if 'wetter_API' in jsonpass:
+    if jsonpass['wetter_API']!='':
+        temperatur,wetter,feuchte=Wetter()
+        bericht='\nAktuell haben wir geschmeidige '+str(temperatur)+' Grad Celsius bei '+str(feuchte)\
+                +' Luftfeuchtigkeit.\nDer Himmel ist '+str(wetter)+'.\n'
+    else:
+        bericht = 'Wie das Wetter derzeit ist? Man(n) richte seinen Blick gen Himmel oder' \
+                  ' generiere einen API-Key unter https://www.wunderground.com/signup?mode=api_signup'
+else:
+    bericht='Wie das Wetter derzeit ist? Man(n) richte seinen Blick gen Himmel oder' \
+            ' generiere einen API-Key unter https://www.wunderground.com/signup?mode=api_signup'
 
 if mail == 1 or jsonpass['debug']=='True':
     body = 'Es gibt eine aktuelle Version des heutigen Vertretungsplanes.'+mailzusatz+bericht
