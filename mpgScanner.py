@@ -100,6 +100,14 @@ def update():
         jsonpass['Tag_Nummer']=''
         with open(pfad+'/pass.json', 'w') as fp:
             json.dump(jsonpass, fp, sort_keys=True, indent=4)
+def Wetter():
+    url = 'http://api.wunderground.com/api/'+jsonpass['wetter_API']+'/conditions/lang:DL/q/Germany/pws:'+jsonpass['wetter_Ort']+'.json'
+    response = requests.get(url)
+    data_response = response.json()
+    temperatur=(data_response['current_observation']['temp_c'])
+    wetter=(data_response['current_observation']['weather'])
+    feuchte=(data_response['current_observation']['relative_humidity'])
+    return temperatur,wetter,feuchte
 
 pfad = os.path.dirname(__file__)
 mail = 0
@@ -153,7 +161,7 @@ if os.path.isdir(pfad+'/mpg')!= True:   #prüfen, ob das UNTERverzeichniss /mpg 
     os.makedirs(pfad+'/mpg')
     print ('Downloadverzeichniss bei '+pfad +' /mpg/ created!!!')
 
-if int(tag) == 1:       #Update einmal pro Monat (Ferien)
+if int(tag) == 1 and int(time.strftime('%H'))== 8:       #Update einmal pro Monat (Ferien)
     print("It´s Update Time!!!")
     url_ferien = 'http://api.smartnoob.de/ferien/v1/ferien/?bundesland=' + jsonpass['Land']
     url_feiertage = 'http://api.smartnoob.de/ferien/v1/feiertage/?bundesland=' + jsonpass['Land']
@@ -239,14 +247,14 @@ print('Es ist ein Feiertag: '+str(feiertag))
 print('Es ist morgen ein Feiertag: '+str(feiertag_morgen))
 
 if feiertag_morgen:
-    mailzusatz='\n \nMorgen ist ein Feiertag.\nNeue Nachrichten erst am nächsten Werktag wieder.\nGenießt die Zeit!'
+    mailzusatz = '\n \nMorgen ist ein Feiertag.\nNeue Nachrichten erst am nächsten Werktag wieder.\nGenießt die Zeit!'
 ############################################################
 if ferien:
     print('Es sind Ferien, also lass ich euch in Ruhe')
     quit()
 if feiertag_morgen:
     print('Morgen ist Feiertag, also gibts auch nichts, was sich lohnt, anzuschauen.')
-    quit()
+    #quit()
 
 try:
     os.rename(pfad + '/mpg/heute.pdf', pfad +'/mpg/heute1.pdf')
@@ -343,7 +351,7 @@ if jsonpass['debug']=="True":
     TOKEN = jsonpass['debug_TOKEN']
     chat_id = jsonpass['debug_Chat_ID']
     tb = telebot.TeleBot(TOKEN)
-    mailzusatz = '\n \nDies ist eine Testnachricht!\nDer Versand erfolgt nur an Hubobel und schneeschieben.\n\n' \
+    mailzusatz = mailzusatz + '\n \nDies ist eine Testnachricht!\nDer Versand erfolgt nur an Hubobel und schneeschieben.\n\n' \
                  'Zitat des Tages:\n'+ jsonpass['zitat']+'\nAutor: '+jsonpass['autor']+'\n'
 
 if mail == 1 or jsonpass['debug']=='True':
@@ -384,3 +392,4 @@ if mail == 3 or jsonpass['debug']=='True':
         tb.send_document(chat_id, document)
         if mailzusatz != '':
             tb.send_message(chat_id,mailzusatz)
+temperatur,wetter,feuchte=Wetter()
