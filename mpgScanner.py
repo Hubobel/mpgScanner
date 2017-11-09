@@ -354,8 +354,12 @@ if jsonpass['debug']=="True":
     mailzusatz = mailzusatz + '\n \nDies ist eine Testnachricht!\nDer Versand erfolgt nur an Hubobel und schneeschieben.\n\n' \
                  'Zitat des Tages:\n'+ jsonpass['zitat']+'\nAutor: '+jsonpass['autor']+'\n'
 
+temperatur,wetter,feuchte=Wetter()
+bericht='\nAktuell haben wir in Ludwigshafen '+str(temperatur)+' Grad Celsius bei '+str(feuchte)\
+        +' Luftfeuchtigkeit.\nDer Himmel ist '+str(wetter)+'.'
+
 if mail == 1 or jsonpass['debug']=='True':
-    body = 'Es gibt eine aktuelle Version des heutigen Vertretungsplanes.'+mailzusatz
+    body = 'Es gibt eine aktuelle Version des heutigen Vertretungsplanes.'+mailzusatz+bericht
     anhang = ['heute.pdf']
     sub = 'MPG-heute aktualisiert'
     if os.path.isfile(pfad + '/mpg/adressen.txt'):
@@ -364,10 +368,9 @@ if mail == 1 or jsonpass['debug']=='True':
     if telegram:
         document = open(pfad+'/mpg/heute.pdf', 'rb')
         tb.send_document(chat_id, document, caption='Es gibt eine aktuelle Version des heutigen Vertretungsplanes.')
-        if mailzusatz!='':
-            tb.send_message(chat_id, mailzusatz)
+        tb.send_message(chat_id, mailzusatz+bericht)
 if mail == 2 or jsonpass['debug']=='True':
-    body = 'Es gibt eine aktuelle Version des morgigen Vertretungsplanes.'+mailzusatz
+    body = 'Es gibt eine aktuelle Version des morgigen Vertretungsplanes.'+mailzusatz+bericht
     anhang = ['morgen.pdf']
     sub = 'MPG-morgen aktualisiert'
     if os.path.isfile(pfad + '/mpg/adressen.txt'):
@@ -376,10 +379,9 @@ if mail == 2 or jsonpass['debug']=='True':
     if telegram:
         document = open(pfad + '/mpg/morgen.pdf', 'rb')
         tb.send_document(chat_id, document, caption='Es gibt eine aktuelle Version des morgigen Vertretungsplanes.')
-        if mailzusatz!='':
-            tb.send_message(chat_id, mailzusatz)
+        tb.send_message(chat_id, mailzusatz + bericht)
 if mail == 3 or jsonpass['debug']=='True':
-    body = 'Es gibt aktuelle Versionen der MPG-Vertretungspläne.'+mailzusatz
+    body = 'Es gibt aktuelle Versionen der MPG-Vertretungspläne.'+mailzusatz+bericht
     anhang = ['heute.pdf','morgen.pdf']
     sub = 'MPG-Vertretungspläne aktualisiert'
     if os.path.isfile(pfad + '/mpg/adressen.txt'):
@@ -390,6 +392,5 @@ if mail == 3 or jsonpass['debug']=='True':
         tb.send_document(chat_id, document, caption='Es gibt aktuelle Versionen der MPG-Vertretungspläne.')
         document = open(pfad + '/mpg/morgen.pdf', 'rb')
         tb.send_document(chat_id, document)
-        if mailzusatz != '':
-            tb.send_message(chat_id,mailzusatz)
-temperatur,wetter,feuchte=Wetter()
+        tb.send_message(chat_id, mailzusatz + bericht)
+
