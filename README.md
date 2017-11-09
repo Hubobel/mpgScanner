@@ -17,6 +17,9 @@ Nun müssen folgende Angaben innerhalb dieser 'pass.json' gemacht werden:
 * "TOKEN":der Usertoken des Telegrammessengers (optional)
 * "Chat_ID":Chat_ID des Telegrammessengers (optional)
 * "ccu_ip":IP der CCU-Zentrale der Hausautomation 'Homematic' (optional)
+* "wetter_API": der API-Key von wunderground.com
+* "wetter_Ort": die ID der verwendeten Wetterstation
+
 
 Weiterhin muss auf dem ausführenden System die Pythonbiliothek "pyTelegramBotAPI" installiert sein (wenn man Telegram nutzen möchte, sonst wird diese Funktion automatisch deaktiviert:
 
@@ -46,6 +49,8 @@ Eintrag in der crontab sollte dann in etwa so ausschauen (Pfad zum Script bitte 
 
 Diese Software benutz den Zugang zum Schulserver des Max-Planck-Gymnasiums in Ludwigshafen (http://www.mpglu.de/aktuelles/vertretungsplan.html), um dort die Vertretungspläne für den aktuellen und den darauf folgenden Schultag zu laden. Für die Feier- und Ferientagsdaten wird die API von smartnoob.de  (https://robin.meis.space/2014/04/15/ferien-feiertag-api-fuer-deutschland/) benutz. Vielen Dank für die Bereitstellung der Daten.
 Für das "Zitat des Tages Feature" nutze ich die API von https://taeglicheszit.at
+Um die aktuelle Temperatur/Luftfeuchtigkeit und "Bedeckung" anzuzeigen, greife ich auf die API von http://www.wunderground.com zurück.
+
 
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.me/Hubobel)
