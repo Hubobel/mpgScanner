@@ -3,7 +3,8 @@
 holt die Vertretungspläne vom Schulserver und verschickt diese, sollten Aktualisierungen vorliegen, dann per Mail und/oder Telegram-Messenger an beliebige viele
 Empfänger (via Blindcopy, BCC),in Abhänigkeit davon, ob gerade Ferien oder ein Feiertag sind.
 Für Nutzer der Hausautomation "Homematic": Es wird eine Systemvariable "Ferien" automatisch auf "True" bzw "False" gesetzt, wenn man dies möchte.
-
+Zusätzlich werden einmal pro Tag ein "Zitat des Tages" angegeben.
+Beim Versand der PDF werden die jeweils aktuelle Temperatur,Luftfeuchte und der Wolkenstatus mitangegeben. Ein zufällig ausgewählter "Chuck-Norris-Fact" runden das ganze dann ab.
 
 # Installation
 
@@ -50,6 +51,7 @@ Eintrag in der crontab sollte dann in etwa so ausschauen (Pfad zum Script bitte 
 Diese Software benutz den Zugang zum Schulserver des Max-Planck-Gymnasiums in Ludwigshafen (http://www.mpglu.de/aktuelles/vertretungsplan.html), um dort die Vertretungspläne für den aktuellen und den darauf folgenden Schultag zu laden. Für die Feier- und Ferientagsdaten wird die API von smartnoob.de  (https://robin.meis.space/2014/04/15/ferien-feiertag-api-fuer-deutschland/) benutz. Vielen Dank für die Bereitstellung der Daten.
 Für das "Zitat des Tages Feature" nutze ich die API von https://taeglicheszit.at
 Um die aktuelle Temperatur/Luftfeuchtigkeit und "Bedeckung" anzuzeigen, greife ich auf die API von http://www.wunderground.com zurück.
+Der Chuck-Norris-Fact wird von meiner eigenen API (hubobel.de:5000/facts) bereitgestellt.
 
 
 
