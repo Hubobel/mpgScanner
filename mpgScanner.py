@@ -4,6 +4,7 @@ import time
 import datetime
 import os
 import smtplib
+import random
 try:
     import telebot
     telegram = True
@@ -108,6 +109,15 @@ def Wetter():
     wetter=(data_response['current_observation']['weather'])
     feuchte=(data_response['current_observation']['relative_humidity'])
     return temperatur,wetter,feuchte
+def Chuckfact():
+    fact=[]
+    pfad = os.path.dirname(__file__)
+    chuck_file= open(pfad + '/mpg/chuck.rtf','r')
+    for line in chuck_file:
+        fact.append(line)
+    chuck_file.close()
+    ran=random.randint(1,len(fact)-1)
+    return fact[ran]
 
 pfad = os.path.dirname(__file__)
 mail = 0
@@ -364,9 +374,10 @@ if 'wetter_API' in jsonpass:
 else:
     bericht='Wie das Wetter derzeit ist? Man(n) richte seinen Blick gen Himmel oder' \
             ' generiere einen API-Key unter https://www.wunderground.com/signup?mode=api_signup'
+fact='\nChuck-Norris-Fact:\n'+Chuckfact()
 
 if mail == 1 or jsonpass['debug']=='True':
-    body = 'Es gibt eine aktuelle Version des heutigen Vertretungsplanes.'+mailzusatz+bericht
+    body = 'Es gibt eine aktuelle Version des heutigen Vertretungsplanes.'+mailzusatz+bericht+fact
     anhang = ['heute.pdf']
     sub = 'MPG-heute aktualisiert'
     if os.path.isfile(pfad + '/mpg/adressen.txt'):
@@ -375,9 +386,9 @@ if mail == 1 or jsonpass['debug']=='True':
     if telegram:
         document = open(pfad+'/mpg/heute.pdf', 'rb')
         tb.send_document(chat_id, document, caption='Es gibt eine aktuelle Version des heutigen Vertretungsplanes.')
-        tb.send_message(chat_id, mailzusatz+bericht)
+        tb.send_message(chat_id, mailzusatz+bericht+fact)
 if mail == 2 or jsonpass['debug']=='True':
-    body = 'Es gibt eine aktuelle Version des morgigen Vertretungsplanes.'+mailzusatz+bericht
+    body = 'Es gibt eine aktuelle Version des morgigen Vertretungsplanes.'+mailzusatz+bericht+fact
     anhang = ['morgen.pdf']
     sub = 'MPG-morgen aktualisiert'
     if os.path.isfile(pfad + '/mpg/adressen.txt'):
@@ -386,9 +397,9 @@ if mail == 2 or jsonpass['debug']=='True':
     if telegram:
         document = open(pfad + '/mpg/morgen.pdf', 'rb')
         tb.send_document(chat_id, document, caption='Es gibt eine aktuelle Version des morgigen Vertretungsplanes.')
-        tb.send_message(chat_id, mailzusatz + bericht)
+        tb.send_message(chat_id, mailzusatz + bericht+fact)
 if mail == 3 or jsonpass['debug']=='True':
-    body = 'Es gibt aktuelle Versionen der MPG-Vertretungspläne.'+mailzusatz+bericht
+    body = 'Es gibt aktuelle Versionen der MPG-Vertretungspläne.'+mailzusatz+bericht+fact
     anhang = ['heute.pdf','morgen.pdf']
     sub = 'MPG-Vertretungspläne aktualisiert'
     if os.path.isfile(pfad + '/mpg/adressen.txt'):
@@ -399,5 +410,5 @@ if mail == 3 or jsonpass['debug']=='True':
         tb.send_document(chat_id, document, caption='Es gibt aktuelle Versionen der MPG-Vertretungspläne.')
         document = open(pfad + '/mpg/morgen.pdf', 'rb')
         tb.send_document(chat_id, document)
-        tb.send_message(chat_id, mailzusatz + bericht)
+        tb.send_message(chat_id, mailzusatz + bericht+fact)
 
