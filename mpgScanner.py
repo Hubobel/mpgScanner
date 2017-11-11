@@ -110,14 +110,12 @@ def Wetter():
     feuchte=(data_response['current_observation']['relative_humidity'])
     return temperatur,wetter,feuchte
 def Chuckfact():
-    fact=[]
-    pfad = os.path.dirname(__file__)
-    chuck_file= open(pfad + '/mpg/chuck.rtf','r')
-    for line in chuck_file:
-        fact.append(line)
-    chuck_file.close()
-    ran=random.randint(1,len(fact)-1)
-    return fact[ran]
+    url_zitat = 'http://api.hubobel.de/facts/9999'
+    resp_zitat = requests.get(url_zitat)
+    data_zitat = resp_zitat.json()
+    for i in data_zitat:
+        fact=(data_zitat[i])
+        return fact
 
 pfad = os.path.dirname(__file__)
 mail = 0

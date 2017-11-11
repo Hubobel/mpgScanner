@@ -1,0 +1,10 @@
+[2017-Nov-11 15:58] 127.0.0.1 GET http /? 200 OK
+[2017-Nov-11 15:58] 127.0.0.1 GET http /? 200 OK
+[2017-Nov-11 15:58] 127.0.0.1 GET http /? 200 OK
+[2017-Nov-11 15:58] 127.0.0.1 GET http /facts? 200 OK
+[2017-Nov-11 15:58] 127.0.0.1 GET http /facts? 200 OK
+[2017-Nov-11 15:58] 127.0.0.1 GET http /facts/? 404 NOT FOUND
+[2017-Nov-11 15:58] 127.0.0.1 GET http /facts/12? 200 OK
+[2017-Nov-11 15:58] 127.0.0.1 GET http /facts/? 404 NOT FOUND
+[2017-Nov-11 15:58] 127.0.0.1 GET http /facts/9999? 200 OK
+[2017-Nov-11 15:58] 127.0.0.1 GET http /facts/9999? 200 OK
