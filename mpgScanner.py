@@ -116,6 +116,13 @@ def Chuckfact():
     for i in data_zitat:
         fact=(data_zitat[i])
         return fact
+def Lotto():
+    a = (sorted(random.sample(range(1, 49), 6)))
+    b = random.randrange(1, 49)
+    while b in a:
+        b = random.randrange(1, 49)
+    lotto =  str(a) + ',Zusatzzahl: ' + str(b)
+    return lotto
 
 pfad = os.path.dirname(__file__)
 mail = 0
@@ -324,7 +331,7 @@ except FileNotFoundError:
 #anhang = ['adressen.txt','heute.pdf','morgen.pdf']
 #Nachricht (fradress,toadress,bcc,sub,body,anhang)
 
-if mail!=0:
+if mail!=0 or jsonpass['debug']=='True':
     if update():
         print ('Neuer Tag, neues Gluck!')
         if wtag == '1':
@@ -338,16 +345,21 @@ if mail!=0:
                          '\nZitat des Tages:\n'+ jsonpass['zitat']+ \
                          "\nAutor: " + jsonpass['autor'] + '\n'
         if wtag == '3':
+            lotto=Lotto()
             mailzusatz = '\n \nHallo Mittwoch!\nIch wünsche eine schöne Wochenmitte.\nKopf hoch! ' \
-                         'Das Wochenende naht!\n' + '\nZitat des Tages:\n'+ jsonpass['zitat']+ \
+                         + 'Wenn ich Lotto spielen würde, dann kämen heute folgende Zahlen zum Einsatz: ' +lotto +\
+                         '\nZitat des Tages:\n'+ jsonpass['zitat']+ \
                          "\nAutor: " + jsonpass['autor'] + '\n'
         if wtag == '4':
             mailzusatz = '\n \nDer Donnerstag ist bekanntlich der \'kleine Freitag\'' \
                          '\nNur noch einmal (!) Gas geben!\n' '\nZitat des Tages:\n'+ jsonpass['zitat']+\
                          '\nAutor: '+jsonpass['autor']+'\n'
         if wtag == '5':
+            lotto=Lotto()
             mailzusatz = '\n \nEs ist Freitag!\nIch wünsche ein schönes Wochenende.' \
-                         '\nNeue Nachrichten kommen erst am Montag wieder.\n' '\nZitat des Tages:\n'+ jsonpass['zitat']+\
+                         '\nNeue Nachrichten kommen erst am Montag wieder.\n'+'Vieleicht habt ihr ja am Samstag'\
+                        ' Glück beim Lotto. Probiert doch mal diese Zahlen: '+lotto+\
+                         '\nZitat des Tages:\n'+ jsonpass['zitat']+\
                          '\nAutor: '+jsonpass['autor']+'\n'
     else:
         print ('im Westen nix neues')
