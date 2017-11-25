@@ -5,6 +5,7 @@ import datetime
 import os
 import smtplib
 import random
+import shutil
 try:
     import telebot
     telegram = True
@@ -110,7 +111,7 @@ def Wetter():
     feuchte=(data_response['current_observation']['relative_humidity'])
     return temperatur,wetter,feuchte
 def Chuckfact():
-    url_zitat = 'http://api.hubobel.de/facts/9999'
+    url_zitat = 'http://api.hubobel.de/zufall'
     resp_zitat = requests.get(url_zitat)
     data_zitat = resp_zitat.json()
     for i in data_zitat:
@@ -118,10 +119,10 @@ def Chuckfact():
         return fact
 def Lotto():
     a = (sorted(random.sample(range(1, 49), 6)))
-    b = random.randrange(1, 49)
+    b = random.randrange(0, 9)
     while b in a:
         b = random.randrange(1, 49)
-    lotto =  str(a) + ',Zusatzzahl: ' + str(b)
+    lotto =  str(a) + ',Superzahl: ' + str(b)
     return lotto
 
 pfad = os.path.dirname(__file__)
@@ -136,6 +137,11 @@ feiertag = False
 feiertag_morgen = False
 fradress='carsten.richter77@gmail.com'
 toadress='carsten@hubobel.de'
+tage=['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag']
+heute_name=(tage[int(wtag)-1])
+if int(wtag)>=5:
+    wtag=0
+morgen_name=(tage[int(wtag)])
 
 if os.path.isfile(pfad+'/pass.json') !=True:
     print('"pass.json" scheint es nicht zu geben.')
@@ -348,7 +354,7 @@ if mail!=0 or jsonpass['debug']=='True':
             lotto=Lotto()
             mailzusatz = '\n \nHallo Mittwoch!\nIch wünsche eine schöne Wochenmitte.\nKopf hoch! ' \
                          + 'Wenn ich Lotto spielen würde, dann kämen heute folgende Zahlen zum Einsatz: ' +lotto +\
-                         '\nZitat des Tages:\n'+ jsonpass['zitat']+ \
+                         '\n\nZitat des Tages:\n'+ jsonpass['zitat']+ \
                          "\nAutor: " + jsonpass['autor'] + '\n'
         if wtag == '4':
             mailzusatz = '\n \nDer Donnerstag ist bekanntlich der \'kleine Freitag\'' \
@@ -359,7 +365,7 @@ if mail!=0 or jsonpass['debug']=='True':
             mailzusatz = '\n \nEs ist Freitag!\nIch wünsche ein schönes Wochenende.' \
                          '\nNeue Nachrichten kommen erst am Montag wieder.\n'+'Vieleicht habt ihr ja am Samstag'\
                         ' Glück beim Lotto. Probiert doch mal diese Zahlen: '+lotto+\
-                         '\nZitat des Tages:\n'+ jsonpass['zitat']+\
+                         '\n\nZitat des Tages:\n'+ jsonpass['zitat']+\
                          '\nAutor: '+jsonpass['autor']+'\n'
     else:
         print ('im Westen nix neues')
@@ -386,6 +392,8 @@ else:
             ' generiere einen API-Key unter https://www.wunderground.com/signup?mode=api_signup'
 fact='\nChuck-Norris-Fact:\n'+Chuckfact()
 
+shutil.copy(pfad+'/mpg/morgen.pdf',pfad+'/mpg/'+morgen_name+'.pdf')
+
 if mail == 1 or jsonpass['debug']=='True':
     body = 'Es gibt eine aktuelle Version des heutigen Vertretungsplanes.'+mailzusatz+bericht+fact
     anhang = ['heute.pdf']
@@ -398,27 +406,28 @@ if mail == 1 or jsonpass['debug']=='True':
         tb.send_document(chat_id, document, caption='Es gibt eine aktuelle Version des heutigen Vertretungsplanes.')
         tb.send_message(chat_id, mailzusatz+bericht+fact)
 if mail == 2 or jsonpass['debug']=='True':
-    body = 'Es gibt eine aktuelle Version des morgigen Vertretungsplanes.'+mailzusatz+bericht+fact
-    anhang = ['morgen.pdf']
+    body = 'Es gibt eine aktualisierte Version des Vertretungsplanes für '+morgen_name+mailzusatz+bericht+fact
+    anhang = [morgen_name+'.pdf']
     sub = 'MPG-morgen aktualisiert'
     if os.path.isfile(pfad + '/mpg/adressen.txt'):
         Nachricht(fradress, toadress, bcc, sub, body, anhang)
         print (body+' ich versende das mal an: '+str(bcc))
     if telegram:
-        document = open(pfad + '/mpg/morgen.pdf', 'rb')
-        tb.send_document(chat_id, document, caption='Es gibt eine aktuelle Version des morgigen Vertretungsplanes.')
+        document = open(pfad + '/mpg/'+morgen_name+'.pdf', 'rb')
+        tb.send_document(chat_id, document, caption='Es gibt eine aktualisierte Version '
+                                                    'des Vertretungsplanes für '+morgen_name+'.')
         tb.send_message(chat_id, mailzusatz + bericht+fact)
 if mail == 3 or jsonpass['debug']=='True':
-    body = 'Es gibt aktuelle Versionen der MPG-Vertretungspläne.'+mailzusatz+bericht+fact
-    anhang = ['heute.pdf','morgen.pdf']
+    body = 'Es gibt aktualisierte Versionen der MPG-Vertretungspläne.'+mailzusatz+bericht+fact
+    anhang = ['heute.pdf',morgen_name+'.pdf']
     sub = 'MPG-Vertretungspläne aktualisiert'
     if os.path.isfile(pfad + '/mpg/adressen.txt'):
         Nachricht(fradress, toadress, bcc, sub, body, anhang)
         print (body+' ich versende das mal an: '+str(bcc))
     if telegram:
         document = open(pfad + '/mpg/heute.pdf', 'rb')
-        tb.send_document(chat_id, document, caption='Es gibt aktuelle Versionen der MPG-Vertretungspläne.')
-        document = open(pfad + '/mpg/morgen.pdf', 'rb')
+        tb.send_document(chat_id, document, caption='Es gibt aktualisierte Versionen der MPG-Vertretungspläne.')
+        document = open(pfad + '/mpg/'+morgen_name+'.pdf', 'rb')
         tb.send_document(chat_id, document)
         tb.send_message(chat_id, mailzusatz + bericht+fact)
 
