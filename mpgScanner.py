@@ -109,6 +109,10 @@ def Wetter():
     temperatur=(data_response['current_observation']['temp_c'])
     wetter=(data_response['current_observation']['weather'])
     feuchte=(data_response['current_observation']['relative_humidity'])
+    if wetter=='Leichter Regen':
+        wetter='bedeckt und es herrscht leichter Regen....brrrrr!'
+    if wetter=='Regen':
+        wetter='voller Wolken und es regnet.'
     return temperatur,wetter,feuchte
 def Chuckfact():
     url_zitat = 'http://api.hubobel.de/zufall'
