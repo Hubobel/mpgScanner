@@ -51,7 +51,7 @@ Eintrag in der crontab sollte dann in etwa so ausschauen (Pfad zum Script bitte 
 Diese Software benutz den Zugang zum Schulserver des Max-Planck-Gymnasiums in Ludwigshafen (http://www.mpglu.de/aktuelles/vertretungsplan.html), um dort die Vertretungspläne für den aktuellen und den darauf folgenden Schultag zu laden. Für die Feier- und Ferientagsdaten wird die API von smartnoob.de  (https://robin.meis.space/2014/04/15/ferien-feiertag-api-fuer-deutschland/) benutz. Vielen Dank für die Bereitstellung der Daten.
 Für das "Zitat des Tages Feature" nutze ich die API von https://taeglicheszit.at
 Um die aktuelle Temperatur/Luftfeuchtigkeit und "Bedeckung" anzuzeigen, greife ich auf die API von http://www.wunderground.com zurück.
-Der Chuck-Norris-Fact wird von meiner eigenen API (hubobel.de:5000/facts) bereitgestellt.
+Der Chuck-Norris-Fact wird von meiner eigenen API (api.hubobel.de/facts) bereitgestellt.
 
 
 
