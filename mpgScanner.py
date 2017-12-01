@@ -142,10 +142,11 @@ feiertag_morgen = False
 fradress='carsten.richter77@gmail.com'
 toadress='carsten@hubobel.de'
 tage=['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag']
+wtag1=wtag
 heute_name=(tage[int(wtag)-1])
 if int(wtag)>=5:
-    wtag=0
-morgen_name=(tage[int(wtag)])
+    wtag1=0
+morgen_name=(tage[int(wtag1)])
 
 if os.path.isfile(pfad+'/pass.json') !=True:
     print('"pass.json" scheint es nicht zu geben.')
