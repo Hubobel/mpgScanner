@@ -122,11 +122,14 @@ def Chuckfact():
         fact=(data_zitat[i])
         return fact
 def Lotto():
+    global lottoa,lottob
     a = (sorted(random.sample(range(1, 49), 6)))
     b = random.randrange(0, 9)
     while b in a:
         b = random.randrange(1, 49)
     lotto =  str(a) + ',Superzahl: ' + str(b)
+    lottoa=a
+    lottoa.append(b)
     return lotto
 
 pfad = os.path.dirname(__file__)
@@ -134,6 +137,7 @@ mail = 0
 jetzt = int(time.strftime('%j'))
 tag = time.strftime('%d')
 wtag = time.strftime('%w')
+timestamp=time.strftime("%d.%m.%Y %H:%M:%S")
 mailzusatz=""
 ferien = False
 ferien_morgen = False
@@ -355,12 +359,16 @@ if mail!=0 or jsonpass['debug']=='True':
                          '\nViel Spass, bei allem, was ihr so treibt\n'+ \
                          '\nZitat des Tages:\n'+ jsonpass['zitat']+ \
                          "\nAutor: " + jsonpass['autor'] + '\n'
-        if wtag == '3':
+        if wtag == '3' or jsonpass['debug']=='True':
             lotto=Lotto()
             mailzusatz = '\n \nHallo Mittwoch!\nIch wünsche eine schöne Wochenmitte.\nKopf hoch! ' \
                          + 'Wenn ich Lotto spielen würde, dann kämen heute folgende Zahlen zum Einsatz: ' +lotto +\
                          '\n\nZitat des Tages:\n'+ jsonpass['zitat']+ \
                          "\nAutor: " + jsonpass['autor'] + '\n'
+            jsonpass['lotto'] = lottoa
+            jsonpass['lotto_timestamp']=timestamp
+            with open(pfad + '/pass.json', 'w') as fp:
+                json.dump(jsonpass, fp, sort_keys=True, indent=4)
         if wtag == '4':
             mailzusatz = '\n \nDer Donnerstag ist bekanntlich der \'kleine Freitag\'' \
                          '\nNur noch einmal (!) Gas geben!\n' '\nZitat des Tages:\n'+ jsonpass['zitat']+\
@@ -372,8 +380,13 @@ if mail!=0 or jsonpass['debug']=='True':
                         ' Glück beim Lotto. Probiert doch mal diese Zahlen: '+lotto+\
                          '\n\nZitat des Tages:\n'+ jsonpass['zitat']+\
                          '\nAutor: '+jsonpass['autor']+'\n'
+            jsonpass['lotto'] = lottoa
+            jsonpass['lotto_timestamp'] = timestamp
+            with open(pfad + '/pass.json', 'w') as fp:
+                json.dump(jsonpass, fp, sort_keys=True, indent=4)
     else:
         print ('im Westen nix neues')
+
 
 if jsonpass['debug']=="True":
     update()
@@ -435,4 +448,3 @@ if mail == 3 or jsonpass['debug']=='True':
         document = open(pfad + '/mpg/'+morgen_name+'.pdf', 'rb')
         tb.send_document(chat_id, document)
         tb.send_message(chat_id, mailzusatz + bericht+fact)
-
