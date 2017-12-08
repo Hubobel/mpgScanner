@@ -354,6 +354,28 @@ if mail!=0 or jsonpass['debug']=='True':
                          '\nNicht verzagen, nur Druck formt aus Kohle einen Diamanten!' \
                          '\nZitat des Tages:\n'+ jsonpass['zitat']+ \
                          '\nAutor: ' + jsonpass['autor'] + '\n'
+
+            auswertung = ''
+            datas = passw['lotto']
+            url = 'http://api.hubobel.de/lotto/6aus49/check'
+            resp = requests.post(url, json=datas)
+            data = resp.json()
+            print(data)
+            auswertung += '\nWenn Sie meinem Rat gefolgt sind, und die Zahlen: ' + str(datas[:6])
+            auswertung += '\nzusammen mit der Superzahl: ' + str(datas[-1:]) + ' getippt haben,'
+            auswertung += 'interessiert Sie vieleicht das Ergebniss:\n'
+            auswertung += '\nGezogen wurden am ' + str(data['Ziehung vom']) + ' die Zahlen ' + str(
+                data['aktuelle Ziehung']) + ' mit der Superzahl ' + str(data['aktuelle Superzahl'])
+
+            if len(data['richtige Ziffern']) > 0:
+                auswertung += '\nSomit haben Sie mit den Ziffern ' + str(data['richtige Ziffern']) + ' ' + str(
+                    data['Treffer']) + ' Treffer'
+                if data['Superzahl']:
+                    auswertung += '\nund die richtige Superzahl!'
+            else:
+                auswertung += '\nNeues Spiel, neues Glück! Leider kein Treffer diese Woche!'
+            mailzusatz = mailzusatz + auswertung
+
         if wtag == '2':
             mailzusatz = '\n \nDer Montag liegt hinter uns.\nAb heuteb kann es  nur noch aufwärts gehen!' \
                          '\nViel Spass, bei allem, was ihr so treibt\n'+ \
@@ -373,6 +395,26 @@ if mail!=0 or jsonpass['debug']=='True':
             mailzusatz = '\n \nDer Donnerstag ist bekanntlich der \'kleine Freitag\'' \
                          '\nNur noch einmal (!) Gas geben!\n' '\nZitat des Tages:\n'+ jsonpass['zitat']+\
                          '\nAutor: '+jsonpass['autor']+'\n'
+            auswertung = ''
+            datas = passw['lotto']
+            url = 'http://api.hubobel.de/lotto/6aus49/check'
+            resp = requests.post(url, json=datas)
+            data = resp.json()
+            print(data)
+            auswertung += '\nWenn Sie meinem Rat gefolgt sind, und die Zahlen: ' + str(datas[:6])
+            auswertung += '\nzusammen mit der Superzahl: ' + str(datas[-1:]) + ' getippt haben,'
+            auswertung += 'interessiert Sie vieleicht das Ergebniss:\n'
+            auswertung += '\nGezogen wurden am ' + str(data['Ziehung vom']) + ' die Zahlen ' + str(
+                data['aktuelle Ziehung']) + ' mit der Superzahl ' + str(data['aktuelle Superzahl'])
+
+            if len(data['richtige Ziffern']) > 0:
+                auswertung += '\nSomit haben Sie mit den Ziffern ' + str(data['richtige Ziffern']) + ' ' + str(
+                    data['Treffer']) + ' Treffer'
+                if data['Superzahl']:
+                    auswertung += '\nund die richtige Superzahl!'
+            else:
+                auswertung += '\nNeues Spiel, neues Glück! Leider kein Treffer diese Woche!'
+            mailzusatz=mailzusatz+auswertung
         if wtag == '5':
             lotto=Lotto()
             mailzusatz = '\n \nEs ist Freitag!\nIch wünsche ein schönes Wochenende.' \
