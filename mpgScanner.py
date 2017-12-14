@@ -356,7 +356,7 @@ if mail!=0 or jsonpass['debug']=='True':
                          '\nAutor: ' + jsonpass['autor'] + '\n'
 
             auswertung = ''
-            datas = passw['lotto']
+            datas = jsonpass['lotto']
             url = 'http://api.hubobel.de/lotto/6aus49/check'
             resp = requests.post(url, json=datas)
             data = resp.json()
@@ -396,7 +396,7 @@ if mail!=0 or jsonpass['debug']=='True':
                          '\nNur noch einmal (!) Gas geben!\n' '\nZitat des Tages:\n'+ jsonpass['zitat']+\
                          '\nAutor: '+jsonpass['autor']+'\n'
             auswertung = ''
-            datas = passw['lotto']
+            datas = jsonpass['lotto']
             url = 'http://api.hubobel.de/lotto/6aus49/check'
             resp = requests.post(url, json=datas)
             data = resp.json()
