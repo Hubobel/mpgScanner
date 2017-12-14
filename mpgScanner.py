@@ -115,7 +115,7 @@ def Wetter():
         wetter='voller Wolken und es regnet.'
     return temperatur,wetter,feuchte
 def Chuckfact():
-    url_zitat = 'http://api.hubobel.de/zufall'
+    url_zitat = 'http://api.hubobel.de/facts/zufall'
     resp_zitat = requests.get(url_zitat)
     data_zitat = resp_zitat.json()
     for i in data_zitat:
@@ -125,8 +125,8 @@ def Lotto():
     global lottoa,lottob
     a = (sorted(random.sample(range(1, 49), 6)))
     b = random.randrange(0, 9)
-    while b in a:
-        b = random.randrange(1, 49)
+    #while b in a:
+        #b = random.randrange(1, 49)
     lotto =  str(a) + ',Superzahl: ' + str(b)
     lottoa=a
     lottoa.append(b)
@@ -374,7 +374,7 @@ if mail!=0 or jsonpass['debug']=='True':
                     auswertung += '\nund die richtige Superzahl!'
             else:
                 auswertung += '\nNeues Spiel, neues Glück! Leider kein Treffer diese Woche!'
-            mailzusatz = mailzusatz + auswertung
+            mailzusatz = mailzusatz + auswertung+'\n'
 
         if wtag == '2':
             mailzusatz = '\n \nDer Montag liegt hinter uns.\nAb heuteb kann es  nur noch aufwärts gehen!' \
@@ -414,7 +414,7 @@ if mail!=0 or jsonpass['debug']=='True':
                     auswertung += '\nund die richtige Superzahl!'
             else:
                 auswertung += '\nNeues Spiel, neues Glück! Leider kein Treffer diese Woche!'
-            mailzusatz=mailzusatz+auswertung
+            mailzusatz=mailzusatz+auswertung+'\n'
         if wtag == '5':
             lotto=Lotto()
             mailzusatz = '\n \nEs ist Freitag!\nIch wünsche ein schönes Wochenende.' \

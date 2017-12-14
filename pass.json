@@ -1,0 +1,32 @@
+{
+    "Chat_ID": "@mpglu",
+    "Land": "rp",
+    "TOKEN": "467241832:AAH3e0y6Fm7ig5DtConJP29GsD-zX1psNZo",
+    "Tag_Name": "Thursday",
+    "Tag_Nummer": "4",
+    "Uhrzeit": "15:31:42",
+    "autor": "Emil G\u00f6tt",
+    "ccu_ip": "10.0.1.100",
+    "debug": "True",
+    "debug_Chat_ID": "322673713",
+    "debug_TOKEN": "312534798:AAFbMjS-tfd2BiZ_j3NEZuQYKwzACMcioVo",
+    "debug_adress": "carsten@hubobel.de",
+    "gmail_pass": "PL19zPL19z",
+    "gmail_user": "carsten.richter77@gmail.com",
+    "lotto": [
+        10,
+        19,
+        28,
+        40,
+        43,
+        46,
+        7
+    ],
+    "lotto_timestamp": "07.12.2017 15:31:42",
+    "mpg_pass": "Ing8gresk",
+    "mpg_user": "schueler",
+    "pfad": "/Users/hubobel/Documents/Python/mpgScanner",
+    "wetter_API": "35a8e37c649985d5",
+    "wetter_Ort": "ILUDWIGS227",
+    "zitat": "Was du verlieren kannst, hat keinen Wert."
+}
