@@ -363,7 +363,7 @@ if mail!=0 or jsonpass['debug']=='True':
             print(data)
             auswertung += '\nWenn Sie meinem Rat gefolgt sind, und die Zahlen: ' + str(datas[:6])
             auswertung += '\nzusammen mit der Superzahl: ' + str(datas[-1:]) + ' getippt haben,'
-            auswertung += 'interessiert Sie vieleicht das Ergebniss:\n'
+            auswertung += 'interessiert Sie vielleicht das Ergebniss:\n'
             auswertung += '\nGezogen wurden am ' + str(data['Ziehung vom']) + ' die Zahlen ' + str(
                 data['aktuelle Ziehung']) + ' mit der Superzahl ' + str(data['aktuelle Superzahl'])
 
@@ -403,7 +403,7 @@ if mail!=0 or jsonpass['debug']=='True':
             print(data)
             auswertung += '\nWenn Sie meinem Rat gefolgt sind, und die Zahlen: ' + str(datas[:6])
             auswertung += '\nzusammen mit der Superzahl: ' + str(datas[-1:]) + ' getippt haben,'
-            auswertung += 'interessiert Sie vieleicht das Ergebniss:\n'
+            auswertung += 'interessiert Sie vielleicht das Ergebniss:\n'
             auswertung += '\nGezogen wurden am ' + str(data['Ziehung vom']) + ' die Zahlen ' + str(
                 data['aktuelle Ziehung']) + ' mit der Superzahl ' + str(data['aktuelle Superzahl'])
 
@@ -418,7 +418,7 @@ if mail!=0 or jsonpass['debug']=='True':
         if wtag == '5':
             lotto=Lotto()
             mailzusatz = '\n \nEs ist Freitag!\nIch wünsche ein schönes Wochenende.' \
-                         '\nNeue Nachrichten kommen erst am Montag wieder.\n'+'Vieleicht habt ihr ja am Samstag'\
+                         '\nNeue Nachrichten kommen erst am Montag wieder.\n'+'Vielleicht habt ihr ja am Samstag'\
                         ' Glück beim Lotto. Probiert doch mal diese Zahlen: '+lotto+\
                          '\n\nZitat des Tages:\n'+ jsonpass['zitat']+\
                          '\nAutor: '+jsonpass['autor']+'\n'
