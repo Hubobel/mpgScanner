@@ -222,25 +222,17 @@ with open(pfad+'/mpg/json_ferien.data') as file:
 with open(pfad+'/mpg/json_feiertage.data') as file:
     data_feiertage=json.load(file)
 
-a= len(data_ferien['daten'])
-x = 0
-
-while x <a:
-    beginn = data_ferien['daten'][x]['beginn']
-    beginn = datetime.datetime.fromtimestamp(beginn)
-    beginn = int(beginn.strftime('%j'))
-
-    ende = data_ferien['daten'][x]['ende']
-    ende = datetime.datetime.fromtimestamp(ende)
-    ende = int(ende.strftime('%j'))-1
-
+for i in data_ferien['daten']:
+    beginn=int(datetime.datetime.fromtimestamp(i['beginn']).strftime('%j'))
+    ende = int(datetime.datetime.fromtimestamp(i['ende']).strftime('%j'))-1
     if jetzt <= ende and jetzt >= beginn:
         ferien = True
-    if jetzt-1 == beginn:
-        ferien_morgen = True
-    if jetzt >= beginn and jetzt <= ende-1:
-        ferien_morgen = True
-    x = x+1
+    if jetzt >= beginn and ende > beginn:
+        ferien = True
+    if jetzt <= ende:
+        ferien = True
+    if  jetzt > ende and jetzt < beginn:
+        ferien=False
 
 if ferien and ccu:          #setzen der CCU Variable
     try:
